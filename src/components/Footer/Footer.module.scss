@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: flex-start;
 
-  padding-left: 250px;
+  padding-left: 130px;
   .wrapper {
     display: flex;
     flex-direction: row;
@@ -20,7 +20,7 @@
     text-decoration: none;
   }
   @media (max-width: 768px) {
-    padding-left: 100px;
+    padding-left: 80px;
   }
   @media (max-width: 480px) {
     padding-left: 50px;

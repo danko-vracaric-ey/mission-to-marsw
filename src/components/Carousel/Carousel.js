@@ -2,23 +2,30 @@ import classes from "./Carousel.module.scss";
 import { useEffect, useState } from "react";
 import CarouselCard from "./CarouselCard/CarouselCard";
 
-const Carousel = (props) => {
+const Carousel = ({ data }) => {
   const [current, setCurrent] = useState(0);
-  const [data, setData] = useState([]);
   const [isInnerWidth, setIsInnerWidth] = useState(window.innerWidth);
 
+  const debounce = (fn, delay) => {
+    let timerId;
+    return (...args) => {
+      clearTimeout(timerId);
+      timerId = setTimeout(fn, delay, [...args]);
+    };
+  };
   useEffect(() => {
-    window.addEventListener("resize", () => setIsInnerWidth(window.innerWidth));
+    const updateSize = function () {
+      setIsInnerWidth(window.innerWidth);
+    };
+
+    const debouncedUpdateSize = debounce(updateSize, 200);
+    window.addEventListener("resize", debouncedUpdateSize);
+    updateSize();
 
     return () => {
-      window.removeEventListener("resize", () =>
-        setIsInnerWidth(window.innerWidth)
-      );
+      window.removeEventListener("resize", () => debouncedUpdateSize);
     };
   }, []);
-  useEffect(() => {
-    setData(props.data);
-  }, [props.data]);
 
   let splitDataArr = [];
   const splitData = () => {
@@ -60,6 +67,7 @@ const Carousel = (props) => {
               buttons.push(
                 <button
                   type="button"
+                  className={current === i ? classes.active : ""}
                   onClick={() => {
                     setCurrent(i);
                   }}
@@ -71,7 +79,8 @@ const Carousel = (props) => {
                     <CarouselCard
                       key={i}
                       url={e.url}
-                      description={e.explanation.slice(0, 16)}
+                      description={e.explanation.slice(0, 120)}
+                      title={e.title}
                     />
                   );
                 });

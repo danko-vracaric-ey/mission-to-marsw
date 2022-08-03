@@ -1,4 +1,5 @@
 .container {
+  height: 300px;
   margin: 20px;
   margin-bottom: 0px;
   display: flex;
@@ -24,8 +25,12 @@ div.info {
   text-align: center;
   .info_title {
     padding: 20px;
+    font-weight: 700;
   }
   p {
-    padding-bottom: 5px;
+    padding-bottom: 3px;
+    font-size: smaller;
+  }
+  p.description {
   }
 }

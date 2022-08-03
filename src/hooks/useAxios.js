@@ -4,9 +4,8 @@ import { useState } from "react";
 const useAxios = (url) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setIsError] = useState(null);
-  const [data, setData] = useState([]);
 
-  const fetchData = async () => {
+  const fetchData = async (setData) => {
     setIsLoading(true);
     try {
       const response = await axios.get(url);
@@ -28,7 +27,6 @@ const useAxios = (url) => {
     isLoading,
     error,
     fetchData,
-    data,
   };
 };
 

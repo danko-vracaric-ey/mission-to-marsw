@@ -6,8 +6,8 @@ const CarouselCard = (props) => {
         <img src={props.url} alt="space picture"></img>
       </div>
       <div className={classes.info}>
-        <p className={classes.info_title}>Title</p>
-        <p classname={classes.description}>{props.description}</p>
+        <p className={classes.info_title}>{props.title}</p>
+        <p classname={classes.description}>{props.description}...</p>
       </div>
     </div>
   );
