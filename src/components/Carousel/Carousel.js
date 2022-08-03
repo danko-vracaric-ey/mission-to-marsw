@@ -67,7 +67,7 @@ const Carousel = ({ data }) => {
               buttons.push(
                 <button
                   type="button"
-                  className={current === i ? classes.active : ""}
+                  className={current === i ? classes.active : classes.notactive}
                   onClick={() => {
                     setCurrent(i);
                   }}

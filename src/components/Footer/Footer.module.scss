@@ -17,13 +17,14 @@
     font-weight: 600;
   }
   a {
-    text-decoration: none;
+    text-decoration: underline;
+    color: white;
   }
   @media (max-width: 768px) {
     padding-left: 80px;
   }
   @media (max-width: 480px) {
-    padding-left: 50px;
+    padding-left: 40px;
     .wrapper {
       font-size: 400;
       flex-direction: column;
