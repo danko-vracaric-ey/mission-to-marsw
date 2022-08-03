@@ -1,0 +1,32 @@
+.container {
+  height: 10vh;
+  background-color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-left: 250px;
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  p {
+    display: inline;
+    margin: 10px;
+    color: white;
+    font-weight: 600;
+  }
+  a {
+    text-decoration: none;
+  }
+  @media (max-width: 768px) {
+    padding-left: 100px;
+  }
+  @media (max-width: 480px) {
+    padding-left: 50px;
+    .wrapper {
+      font-size: 400;
+      flex-direction: column;
+    }
+  }
+}

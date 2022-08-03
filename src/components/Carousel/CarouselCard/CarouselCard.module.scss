@@ -1,0 +1,31 @@
+.container {
+  margin: 20px;
+  margin-bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  -webkit-box-shadow: -2px 13px 14px 7px rgba(0, 0, 0, 0.48);
+  box-shadow: -2px 13px 14px 7px rgba(0, 0, 0, 0.48);
+  background-color: white;
+  margin-bottom: 10px;
+}
+.picture {
+  height: 20vh;
+  width: 100%;
+}
+.container img {
+  height: 100%;
+  width: 100%;
+}
+
+div.info {
+  background-color: white;
+  text-align: center;
+  .info_title {
+    padding: 20px;
+  }
+  p {
+    padding-bottom: 5px;
+  }
+}

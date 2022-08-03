@@ -1,0 +1,15 @@
+.container {
+  height: 80vh;
+  padding: 80px;
+  h1 {
+    margin: 30px;
+  }
+  p {
+    margin: 20px;
+    margin-left: 0;
+    font-weight: 600;
+  }
+  @media (max-width: 768px) {
+    font-size: smaller;
+  }
+}

@@ -1,0 +1,10 @@
+.container {
+  height: 10vh;
+  background-color: rgba(46, 46, 48);
+  padding: 10px;
+  padding-left: 250px;
+  display: flex;
+  @media (max-width: 768px) {
+    padding-left: 100px;
+  }
+}
