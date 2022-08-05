@@ -1,16 +1,35 @@
+import PropTypes from "prop-types";
+
 import classes from "./CarouselCard.module.scss";
-const CarouselCard = (props) => {
+
+/**
+ *  Card to show image and it's information inside the carousel
+ * @param {string} url  Address of the image.
+ * @param {string} explanation Description of the image.
+ * @param {string} title Title of the event, ocurrence or other type of phenomenon shown in the image.
+ * @returns {JSX} A card with an image and title and description section
+ */
+
+const CarouselCard = ({ image: { key, url, explanation, title } }) => {
   return (
     <div className={classes.container}>
       <div className={classes.picture}>
-        <img src={props.url} alt="space picture"></img>
+        <img src={url} alt="space picture"></img>
       </div>
       <div className={classes.info}>
-        <p className={classes.info_title}>{props.title}</p>
-        <p classname={classes.description}>{props.description}...</p>
+        <p className={classes.info_title}>{title}</p>
+        <p className={classes.description}>{explanation}</p>
       </div>
     </div>
   );
+};
+
+CarouselCard.propTypes = {
+  image: PropTypes.shape({
+    url: PropTypes.string,
+    explanation: PropTypes.string,
+    title: PropTypes.string,
+  }),
 };
 
 export default CarouselCard;

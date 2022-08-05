@@ -1,21 +1,34 @@
-import classes from "./LandingPage.module.scss";
-import useAxios from "../../hooks/useAxios";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import useAxios from "../../hooks/useAxios";
 import Carousel from "../../components/Carousel/Carousel";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import { Link } from "react-router-dom";
-const LandingPage = (props) => {
+import classes from "./LandingPage.module.scss";
+import {
+  LANDING_PAGE_LOADING_TEXT,
+  LANDING_PAGE_PARAGRAPH,
+  LANDING_PAGE_START_APPLICATION_BUTTON,
+} from "../../static";
+
+/**
+ * Landing/Home page is the first page that loads on the user's screen when user lauches the app,
+ *
+ * @returns {JSX} a slider type carousel and a section where user can read about, click and start the application process
+ */
+
+const LandingPage = () => {
   const [data, setData] = useState([]);
   const {
     error,
     isLoading,
     fetchData: getImageOfTheDay,
   } = useAxios(
-    "https://api.nasa.gov/planetary/apod?count=16&api_key=ybCNsvKIe13FyF9pD466eYomPJEc5rWBOdUTN7w9"
+    `https://api.nasa.gov/planetary/apod?count=16&api_key=${process.env.REACT_APP_API_KEY}`
   );
   useEffect(() => {
     getImageOfTheDay(setData);
-  }, []);
+  }, [getImageOfTheDay]);
 
   let content;
 
@@ -25,7 +38,7 @@ const LandingPage = (props) => {
   if (isLoading) {
     content = (
       <div className={classes.loading}>
-        <p>Please wait page is Loading</p>
+        <p>{LANDING_PAGE_LOADING_TEXT}</p>
         <div>
           <LoadingSpinner></LoadingSpinner>
         </div>
@@ -45,14 +58,10 @@ const LandingPage = (props) => {
       {content}
 
       <div className={classes.start_application_container}>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-          suscipit risus id dignissim suscipit. Maecenas ornare sapien et enim
-          imperdiet dapibus.
-        </p>
+        <p>{LANDING_PAGE_PARAGRAPH}</p>
         <Link to="/application">
           <button className={classes.start_application_button}>
-            Start Application Proccess
+            {LANDING_PAGE_START_APPLICATION_BUTTON}
           </button>
         </Link>
       </div>

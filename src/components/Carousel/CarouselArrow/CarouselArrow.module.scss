@@ -1,0 +1,11 @@
+.wrapper {
+  margin-left: 10px;
+  margin-right: 10px;
+  img {
+    height: 10px;
+    width: 10px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Loading spinner animation shown before carousel with images is shown
+ * @returns {JSX} A loading spinner in form of svg
+ */
+
 export default function LoadingSpinner() {
   return (
     <svg

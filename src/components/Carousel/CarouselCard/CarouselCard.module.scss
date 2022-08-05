@@ -1,15 +1,19 @@
 .container {
-  height: 300px;
+  height: 320px;
+  width: 20%;
   margin: 20px;
   margin-bottom: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  -webkit-box-shadow: -2px 13px 14px 7px rgba(0, 0, 0, 0.48);
-  box-shadow: -2px 13px 14px 7px rgba(0, 0, 0, 0.48);
+  -webkit-box-shadow: 6px 2px 16px -3px rgba(0, 0, 0, 0.78);
+  box-shadow: 6px 2px 16px -3px rgba(0, 0, 0, 0.78);
   background-color: white;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    width: 42%;
+  }
+  @media (max-width: 480px) {
+    width: 70%;
+  }
 }
 .picture {
   height: 20vh;
@@ -21,16 +25,30 @@
 }
 
 div.info {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
+
   text-align: center;
   .info_title {
-    padding: 20px;
+    padding: 5px;
+    height: 50px;
     font-weight: 700;
-  }
-  p {
-    padding-bottom: 3px;
     font-size: smaller;
+    padding: 10px;
   }
-  p.description {
+  .description {
+    text-overflow: ellipsis;
+
+    overflow: hidden;
+
+    display: -webkit-box !important;
+
+    -webkit-line-clamp: 3;
+
+    -webkit-box-orient: vertical;
+
+    white-space: normal;
+    font-size: smaller;
+    margin: 10px;
+    margin-top: 15px;
   }
 }

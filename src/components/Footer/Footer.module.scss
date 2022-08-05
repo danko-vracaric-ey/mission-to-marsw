@@ -1,11 +1,8 @@
 .container {
-  height: 10vh;
   background-color: gray;
-  display: flex;
   align-items: center;
   justify-content: flex-start;
 
-  padding-left: 130px;
   .wrapper {
     display: flex;
     flex-direction: row;

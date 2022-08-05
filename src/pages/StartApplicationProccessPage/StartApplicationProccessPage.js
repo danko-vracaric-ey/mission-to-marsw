@@ -1,6 +1,12 @@
 import classes from "./StartApplicationProccessPage.module.scss";
 
-const StartApplicationProccessPage = (props) => {
+/**
+ * Page where user can start their application process
+ *
+ * @returns {JSX}
+ */
+
+const StartApplicationProccessPage = () => {
   return (
     <div className={classes.container}>
       <div className={classes.wrapper}>

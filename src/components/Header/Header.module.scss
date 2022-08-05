@@ -1,9 +1,8 @@
 .container {
-  height: 10vh;
   background-color: rgba(46, 46, 48);
-  padding: 10px;
-  padding-left: 130px;
   display: flex;
+  align-items: center;
+
   @media (max-width: 768px) {
     padding-left: 80px;
   }
