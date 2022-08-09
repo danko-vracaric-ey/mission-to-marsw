@@ -1,0 +1,30 @@
+.container {
+  background-color: gray;
+  align-items: center;
+  justify-content: flex-start;
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  p {
+    display: inline;
+    margin: 10px;
+    color: white;
+    font-weight: 600;
+  }
+  a {
+    text-decoration: underline;
+    color: white;
+  }
+  @media (max-width: 768px) {
+    padding-left: 80px;
+  }
+  @media (max-width: 480px) {
+    padding-left: 40px;
+    .wrapper {
+      font-size: 400;
+      flex-direction: column;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.container {
+  background-color: rgba(46, 46, 48);
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    padding-left: 80px;
+  }
+  @media (max-width: 480px) {
+    padding-left: 40px;
+  }
+}

@@ -1,0 +1,36 @@
+.container {
+  height: 80vh;
+}
+
+.start_application_container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.start_application_button {
+  width: 12rem;
+  border-radius: 0;
+  height: 2rem;
+  background-color: black;
+  color: whitesmoke;
+  border-color: black;
+  font-size: smaller;
+  font-weight: 400;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.loading {
+  height: 50vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px;
+  padding-bottom: 20px;
+}
