@@ -8,12 +8,13 @@ import PropTypes from "prop-types";
  */
 
 const CarouselArrow = (props) => {
+  const { className, alt, onClick } = props;
   return (
-    <div className={`${classes.wrapper} ${props.className}`}>
+    <div className={`${classes.wrapper} ${className}`}>
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/e/e8/ArrowRight-gray.svg"
-        alt={props.alt}
-        onClick={props.onClick}
+        alt={alt}
+        onClick={onClick}
       ></img>
     </div>
   );

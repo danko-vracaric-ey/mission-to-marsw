@@ -6,7 +6,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import StartApplicationProccessPage from "./pages/StartApplicationProccessPage/StartApplicationProccessPage";
 import PrivacyNoticePage from "./pages/PrivacyNoticePage/PrivacyNoticePage";
 import TermsAndConditionsPage from "./pages/TermsAndConditionsPage/TermsAndConditionsPage";
-import AppLayoutComponent from "./components/LayoutComponents/AppLayoutComponent/AppLayoutComponent";
+import AppLayout from "./layout/AppLayout/AppLayout";
 import "./App.module.scss";
 
 /**
@@ -16,7 +16,7 @@ import "./App.module.scss";
 
 function App() {
   return (
-    <AppLayoutComponent>
+    <AppLayout>
       <BrowserRouter>
         <Header></Header>
 
@@ -35,7 +35,7 @@ function App() {
 
         <Footer></Footer>
       </BrowserRouter>
-    </AppLayoutComponent>
+    </AppLayout>
   );
 }
 

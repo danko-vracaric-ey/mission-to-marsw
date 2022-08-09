@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import classes from "./Carousel.module.scss";
 import CarouselCard from "./CarouselCard/CarouselCard";
 import CarouselArrow from "./CarouselArrow/CarouselArrow";
+import CarouselArrowLayout from "../../layout/CarouselArrowLayout/CarouselArrowLayout";
+
 /**
  * Shows images in a slider type carousel that user can control
  *
@@ -14,6 +16,8 @@ import CarouselArrow from "./CarouselArrow/CarouselArrow";
 const Carousel = ({ data: randomSelectionOfImages }) => {
   const [current, setCurrent] = useState(0);
   const [isInnerWidth, setIsInnerWidth] = useState(window.innerWidth);
+
+  let showRightArrow;
 
   const debounce = (fn, delay) => {
     let timerId;
@@ -71,20 +75,25 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
   let buttons = [];
   return (
     <div className={classes.slider_container}>
-      <CarouselArrow
-        className={classes.left_button_wrapper}
-        alt="left-arrow"
-        onClick={() => {
-          if (current !== 0) {
-            setCurrent(current - 1);
-          }
-        }}
-      ></CarouselArrow>
+      <CarouselArrowLayout>
+        {current !== 0 && (
+          <CarouselArrow
+            className={classes.left_button_wrapper}
+            alt="left-arrow"
+            onClick={() => {
+              if (current !== 0) {
+                setCurrent(current - 1);
+              }
+            }}
+          />
+        )}
+      </CarouselArrowLayout>
       {
         <div className={classes.slider_wrapper}>
           <div className={classes.cards_wrapper}>
             {splitDataArr.map(
-              (imageBatch, imageBatchPosition, batchesOfImages) => {
+              (imageBatch, imageBatchPosition, imageBatches) => {
+                showRightArrow = imageBatches.length - 1;
                 buttons.push(
                   <button
                     key={"btn" + imageBatchPosition}
@@ -100,16 +109,14 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
                   ></button>
                 );
                 if (current === imageBatchPosition) {
-                  return imageBatch.map(
-                    (image, imagePosition, imagesOfTheDay) => {
-                      return (
-                        <CarouselCard
-                          key={image.url.slice(0, 5) + imagePosition}
-                          image={image}
-                        />
-                      );
-                    }
-                  );
+                  return imageBatch.map((image, imagePosition) => {
+                    return (
+                      <CarouselCard
+                        key={image.url.slice(0, 5) + imagePosition}
+                        image={image}
+                      />
+                    );
+                  });
                 }
               }
             )}
@@ -117,14 +124,18 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
           <div className={classes.button_scroller}>{buttons}</div>
         </div>
       }
-      <CarouselArrow
-        alt="right-arrow"
-        onClick={() => {
-          if (current !== splitDataArr.length - 1) {
-            setCurrent(current + 1);
-          }
-        }}
-      ></CarouselArrow>
+      <CarouselArrowLayout>
+        {showRightArrow !== current && (
+          <CarouselArrow
+            alt="right-arrow"
+            onClick={() => {
+              if (current !== splitDataArr.length - 1) {
+                setCurrent(current + 1);
+              }
+            }}
+          />
+        )}
+      </CarouselArrowLayout>
     </div>
   );
 };
@@ -132,9 +143,9 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
 Carousel.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      title: PropTypes.string,
-      explanation: PropTypes.string,
-      url: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      explanation: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
     })
   ),
 };

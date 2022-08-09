@@ -8,11 +8,20 @@
   box-shadow: 6px 2px 16px -3px rgba(0, 0, 0, 0.78);
   background-color: white;
   margin-bottom: 10px;
+  @media (max-height: 768px) {
+    height: 261px;
+  }
+  @media (max-height: 576px) {
+    height: 246px;
+  }
   @media (max-width: 768px) {
     width: 42%;
   }
   @media (max-width: 480px) {
     width: 70%;
+  }
+  @media (max-height: 572px) {
+    height: 270px;
   }
 }
 .picture {

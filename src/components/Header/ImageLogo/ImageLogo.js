@@ -7,7 +7,7 @@ import classes from "./ImageLogo.module.scss";
 const ImageLogo = () => {
   return (
     <div className={classes.container}>
-      <img src="https://svgur.com/i/jnN.svg" alt="imgLogo" />
+      <img src="https://svgur.com/i/jnN.svg" alt="Logo" />
     </div>
   );
 };

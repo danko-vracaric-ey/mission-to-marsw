@@ -1,1 +1,7 @@
-
+.container {
+  img {
+    @media (max-height: 768px) {
+      height: 48px;
+    }
+  }
+}

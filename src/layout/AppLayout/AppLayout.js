@@ -1,4 +1,4 @@
-import classes from "./AppLayoutComponent.module.scss";
+import classes from "./AppLayout.module.scss";
 
 /**
  * A container layout component for App component styiling
@@ -6,8 +6,8 @@ import classes from "./AppLayoutComponent.module.scss";
  * @returns {JSX} Whole app data defined inside this component
  */
 
-const AppLayoutComponent = (props) => {
+const AppLayout = (props) => {
   return <div className={classes.container}>{props.children}</div>;
 };
 
-export default AppLayoutComponent;
+export default AppLayout;

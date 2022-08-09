@@ -13,11 +13,11 @@ const useAxios = (url) => {
     async (setData) => {
       setIsLoading(true);
       try {
-        const response = await axios.get(url);
-        if (response.status !== 200) {
+        const { status, data } = await axios.get(url);
+        if (status !== 200) {
           throw new Error("An error occured");
         }
-        const data = await response.data;
+
         setData(data);
       } catch (error) {
         setIsError(error.message || "Something went wrong!");

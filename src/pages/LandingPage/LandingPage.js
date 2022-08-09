@@ -19,12 +19,13 @@ import {
 
 const LandingPage = () => {
   const [data, setData] = useState([]);
+  const count = 5;
   const {
     error,
     isLoading,
     fetchData: getImageOfTheDay,
   } = useAxios(
-    `https://api.nasa.gov/planetary/apod?count=16&api_key=${process.env.REACT_APP_API_KEY}`
+    `https://api.nasa.gov/planetary/apod?count=${count}&api_key=${process.env.REACT_APP_API_KEY}`
   );
   useEffect(() => {
     getImageOfTheDay(setData);
@@ -40,7 +41,7 @@ const LandingPage = () => {
       <div className={classes.loading}>
         <p>{LANDING_PAGE_LOADING_TEXT}</p>
         <div>
-          <LoadingSpinner></LoadingSpinner>
+          <LoadingSpinner />
         </div>
       </div>
     );

@@ -30,7 +30,19 @@ button {
 .button_scroller {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  @media (max-height: 576px) {
+    margin-top: 42px;
+  }
+  @media (max-width: 1201px) {
+    margin-top: 47px;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 10px;
+  }
+  @media (max-width: 480px) {
+    margin-top: 30px;
+  }
 }
 
 div.right_button_wrapper img {

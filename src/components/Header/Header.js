@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import HeaderAndFooterLayoutComponent from "../LayoutComponents/HeaderAndFooterLayoutComponent/HeaderAndFooterLayoutComponent";
+import HeaderAndFooterLayout from "../../layout/HeaderAndFooterLayout/HeaderAndFooterLayout";
 import ImageLogo from "./ImageLogo/ImageLogo";
 import classes from "./Header.module.scss";
 
@@ -11,11 +11,11 @@ import classes from "./Header.module.scss";
 
 const Header = () => {
   return (
-    <HeaderAndFooterLayoutComponent className={classes.container}>
+    <HeaderAndFooterLayout className={classes.container}>
       <Link to="/">
         <ImageLogo />
       </Link>
-    </HeaderAndFooterLayoutComponent>
+    </HeaderAndFooterLayout>
   );
 };
 

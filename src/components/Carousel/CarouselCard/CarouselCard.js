@@ -10,11 +10,11 @@ import classes from "./CarouselCard.module.scss";
  * @returns {JSX} A card with an image and title and description section
  */
 
-const CarouselCard = ({ image: { key, url, explanation, title } }) => {
+const CarouselCard = ({ image: { url, explanation, title } }) => {
   return (
     <div className={classes.container}>
       <div className={classes.picture}>
-        <img src={url} alt="space picture"></img>
+        <img src={url} alt="space" />
       </div>
       <div className={classes.info}>
         <p className={classes.info_title}>{title}</p>
@@ -26,7 +26,7 @@ const CarouselCard = ({ image: { key, url, explanation, title } }) => {
 
 CarouselCard.propTypes = {
   image: PropTypes.shape({
-    url: PropTypes.string,
+    url: PropTypes.string.isRequired,
     explanation: PropTypes.string,
     title: PropTypes.string,
   }),
