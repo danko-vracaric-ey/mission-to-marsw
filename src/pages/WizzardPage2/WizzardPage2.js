@@ -1,10 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import classes from "./WizzardPage2.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
-import { Contex } from "../../store/Store";
 import useInput from "../../hooks/useInput";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
@@ -13,7 +12,6 @@ const WizzardPage2 = (props) => {
   const { page } = useParams();
   const { onForm2Submit } = props;
   const navigate = useNavigate();
-  const applicationData = useContext(Contex);
 
   const [state, setState] = useState({
     email: localStorage.getItem("email"),
@@ -26,7 +24,7 @@ const WizzardPage2 = (props) => {
       : "",
     howManyYearsLived: localStorage.getItem("howManyYearsLived"),
   });
-  console.log(state.state, "DRZAVA");
+
   let isFormValid = false;
 
   const emailInputHandler = (e) => {
@@ -150,18 +148,7 @@ const WizzardPage2 = (props) => {
       return;
     }
     onForm2Submit(state);
-    applicationData.dispatch({
-      type: "ADD_FORM2_DATA",
-      payload: {
-        email: state.email,
-        address1: state.address1,
-        address2: state.address2,
-        state: state.state,
-        city: state.city,
-        postalCode: state.postalCode,
-        howManyYearsLived: state.howManyYearsLived,
-      },
-    });
+
     navigate(`/application/${page * 1 + 1}`);
   };
 

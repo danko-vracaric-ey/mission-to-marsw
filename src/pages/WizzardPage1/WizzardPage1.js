@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
@@ -7,13 +7,11 @@ import classes from "./WizzardPage1.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
-import { Contex } from "../../store/Store";
 
 const WizzardPage1 = (props) => {
   const { page } = useParams();
   const { onForm1Submit } = props;
   const navigate = useNavigate();
-  const applicationData = useContext(Contex);
 
   const [state, setState] = useState({
     title: localStorage.getItem("title"),
@@ -74,15 +72,7 @@ const WizzardPage1 = (props) => {
       return;
     }
     onForm1Submit(state);
-    applicationData.dispatch({
-      type: "ADD_FORM1_DATA",
-      payload: {
-        title: state.title,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        dateOfBirth: state.dateOfBirth,
-      },
-    });
+
     navigate(`/application/${page * 1 + 1}`);
   };
 

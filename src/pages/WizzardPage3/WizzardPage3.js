@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import classes from "./WizzardPage3.module.scss";
@@ -8,10 +8,8 @@ import InputCheckbox from "../../components/Wizzard/InputCheckbox/InputCheckbox"
 import Input from "../../components/Wizzard/Input/Input";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
-import { Contex } from "../../store/Store";
 
 const WizzardPage3 = (props) => {
-  const applicationData = useContext(Contex);
   const { onForm3Submit } = props;
 
   let arrayOfValue = [];
@@ -320,25 +318,7 @@ const WizzardPage3 = (props) => {
     e.preventDefault();
     localStorage.setItem("metalSkills", state.metalworkSkillsDetails);
     onForm3Submit(state);
-    applicationData.dispatch({
-      type: "ADD_FORM3_DATA",
-      payload: {
-        agriculturalSkills: state.agriculturalSkills,
-        agriculturalSkillsDetails: state.agriculturalSkillsDetails,
-        metalworkSkills: state.metalworkSkills,
-        Marking: state.Marking,
-        Cutting: state.Cutting,
-        Drilling: state.Drilling,
-        CuttingThreads: state.CuttingThreads,
-        Filling: state.Filling,
-        Joinin: state.Joining,
-        convicted: state.convicted,
-        reasons: state.reasons,
-        airplaneSkills: state.airplaneSkills,
-        carSkills: state.airplaneSkills,
-        bicycleSkills: state.bicycleSkills,
-      },
-    });
+
     localStorage.clear();
     navigate("/");
     localStorage.setItem("isWizzardOpen", "false");
