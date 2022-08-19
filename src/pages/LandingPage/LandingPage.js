@@ -60,7 +60,7 @@ const LandingPage = () => {
 
       <div className={classes.start_application_container}>
         <p>{LANDING_PAGE_PARAGRAPH}</p>
-        <Link to="/application">
+        <Link to="/application/intro">
           <button className={classes.start_application_button}>
             {LANDING_PAGE_START_APPLICATION_BUTTON}
           </button>

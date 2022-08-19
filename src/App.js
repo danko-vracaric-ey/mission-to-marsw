@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route
-            path="/application"
+            path="/application/*"
             element={<StartApplicationProccessPage />}
           />
           <Route path="/privacynotice" element={<PrivacyNoticePage />} />

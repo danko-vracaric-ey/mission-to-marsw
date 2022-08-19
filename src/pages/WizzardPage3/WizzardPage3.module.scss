@@ -1,0 +1,93 @@
+.form {
+  background-color: white;
+  font-weight: 600;
+}
+.input_field {
+  padding: 20px;
+  min-height: 80%;
+}
+
+.textarea_agri {
+  width: 100%;
+
+  textarea {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.checkbox_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.convicted_bottom {
+  display: flex;
+}
+.convicted_container {
+  height: 105px;
+  margin-top: 10px;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+}
+
+.convicted_container::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.693);
+}
+
+.convicted_container::-webkit-scrollbar-thumb {
+  background: whitesmoke;
+  border-radius: 25px;
+}
+
+.convicted_details_wrapper {
+  display: flex;
+}
+.convicted_details_input_wrapper {
+  display: flex;
+}
+
+.convicted_details_buttons_wrapper {
+  display: flex;
+  align-items: flex-end;
+
+  padding-bottom: 10px;
+  button {
+    width: 20px;
+    margin: 2px;
+  }
+}
+
+.buttons {
+  height: 20%;
+  background-color: rgba(248, 248, 250, 0.741);
+  display: flex;
+}
+
+.button_back {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 10px;
+  button {
+    margin: 10px;
+    background-color: white;
+    padding: 3px;
+  }
+}
+.button_continue {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px;
+  button {
+    background-color: rgb(218, 215, 215);
+    padding: 3px;
+    color: white;
+    border: 0px;
+    font-weight: 600;
+  }
+}

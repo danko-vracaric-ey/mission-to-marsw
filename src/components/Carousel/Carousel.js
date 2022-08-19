@@ -98,11 +98,11 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
                   <button
                     key={"btn" + imageBatchPosition}
                     type="button"
-                    className={
+                    className={`${classes.carousel_button} ${
                       current === imageBatchPosition
                         ? classes.active
                         : classes.notactive
-                    }
+                    }`}
                     onClick={() => {
                       setCurrent(imageBatchPosition);
                     }}

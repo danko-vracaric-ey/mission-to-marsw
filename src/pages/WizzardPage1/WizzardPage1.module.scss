@@ -1,0 +1,70 @@
+.input_field {
+  padding: 20px;
+  font-weight: 600;
+}
+// div.top {
+// }
+
+.mandatory_title_name {
+  height: 20px;
+  font-size: x-small;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  span {
+    color: orange;
+  }
+}
+
+.select_input_wrapper {
+  width: 50%;
+}
+
+.bottom {
+  height: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.first_last_wrapper {
+  display: flex;
+}
+
+.input_name_wrapper {
+  width: 50%;
+}
+
+.input_last_name_wrapper {
+  width: 50%;
+}
+
+.input_date_wrapper {
+  width: 50%;
+}
+
+.button_back {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  button {
+    margin: 10px;
+    background-color: white;
+    padding: 3px;
+  }
+}
+.button_continue {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px;
+  button {
+    background-color: rgb(218, 215, 215);
+    padding: 3px;
+    color: white;
+    border: 0px;
+    font-weight: 600;
+  }
+}
