@@ -21,3 +21,14 @@
     color: orange;
   }
 }
+
+.select_input_wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 85px;
+  p {
+    font-size: x-small;
+    color: red;
+  }
+}

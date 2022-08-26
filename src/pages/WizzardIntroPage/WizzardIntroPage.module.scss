@@ -82,5 +82,17 @@
   button.procede {
     height: 40px;
     width: 120px;
+    background-color: rgba(46, 46, 48);
+    padding: 3px;
+    color: white;
+    border: 0px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+.button_wrapper {
+  button:disabled {
+    background-color: rgb(209, 209, 209);
+    cursor: not-allowed;
   }
 }

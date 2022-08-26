@@ -1,6 +1,4 @@
-import { Route, Routes } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import classes from "./Wizzard.module.scss";
 
@@ -10,51 +8,50 @@ import WizzardPage3 from "../../pages/WizzardPage3/WizzardPage3";
 import WizzardLayout from "../../layout/WizzardLayout/WizzardLayout";
 
 const Wizzard = (props) => {
-  const { page } = useParams();
-  const { inWizzard } = props;
+  const { setInWizzard } = props;
+  const steps = ["Step 1", "Step 2", "Step 3"];
+
+  const [step, setStep] = useState(0);
+
   const [formData, setFormData] = useState({
-    title: localStorage.getItem("title"),
-    firstName: localStorage.getItem("firstName"),
-    lastName: localStorage.getItem("lastName"),
-    dateOfBirth: localStorage.getItem("dateOfBirth"),
-    email: localStorage.getItem("email"),
-    address1: localStorage.getItem("address1"),
-    address2: localStorage.getItem("address2"),
-    state: localStorage.getItem("state"),
-    city: localStorage.getItem("city"),
-    postalCode: localStorage.getItem("postalCode"),
-    howManyYearsLived: localStorage.getItem("howManyYearsLived"),
-    agriculturalSkills: localStorage.getItem("agriculturalSkills")
-      ? localStorage.getItem("agriculturalSkills")
-      : "No",
-    agriculturalSkillsDetails: localStorage.getItem("agriculturalSkillsDetails")
-      ? localStorage.getItem("agriculturalSkillsDetails")
-      : "",
-    metalworkSkills: localStorage.getItem("metalworkSkils"),
-    Marking: localStorage.getItem("Marking") === "true",
-    Cutting: localStorage.getItem("Cutting") === "true",
-    Drilling: localStorage.getItem("Drilling") === "true",
-    CuttingThreads: localStorage.getItem("CuttingThreads") === "true",
-    Filling: localStorage.getItem("Filling") === "true",
-    Joining: localStorage.getItem("Joining") === "true",
-    convicted: localStorage.getItem("convicted")
-      ? localStorage.getItem("convicted")
-      : "No",
-    reasons: [],
-    airplaneSkills: localStorage.getItem("airplaneSkills")
-      ? localStorage.getItem("airplaneSkills")
-      : "No",
-    carSkills: localStorage.getItem("carSkills")
-      ? localStorage.getItem("carSkills")
-      : "No",
-    bicycleSkills: localStorage.getItem("bicycleSkills")
-      ? localStorage.getItem("bicycleSkills")
-      : "No",
+    title: "",
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    email: "",
+    address1: "",
+    address2: "",
+    country: "",
+    city: "",
+    postalCode: "",
+    howManyYearsLived: "",
+    agriculturalSkills: "No",
+    agriculturalSkillsDetails: "",
+    metalworkSkills: "No",
+    metalworkSkillsDetails: [],
+    Marking: false,
+    markingValue: "",
+    Cutting: false,
+    cuttingValue: "",
+    Drilling: false,
+    drillingValue: "",
+    CuttingThreads: false,
+    cuttingThreadsValue: "",
+    Filling: false,
+    fillingValue: "",
+    Joining: false,
+    joiningValue: "",
+    convicted: "No",
+    reasons: [{ whatName: "", whenName: "" }],
+    airplaneSkills: "No",
+    carSkills: "No",
+    bicycleSkills: "No",
   });
-  localStorage.setItem("niz", ["a", "b"]);
-  const b = localStorage.getItem("niz");
 
   const onForm1Submit = (form1data) => {
+    setStep((prev) => {
+      return prev + 1;
+    });
     setFormData((prev) => {
       return {
         ...prev,
@@ -66,13 +63,16 @@ const Wizzard = (props) => {
     });
   };
   const onForm2Submit = (form2data) => {
+    setStep((prev) => {
+      return prev + 1;
+    });
     setFormData((prev) => {
       return {
         ...prev,
         email: form2data.email,
         address1: form2data.address1,
         address2: form2data.address2,
-        state: form2data.state,
+        country: form2data.country,
         city: form2data.city,
         postalCode: form2data.postalCode,
         howManyYearsLived: form2data.howManyYearsLived,
@@ -101,30 +101,79 @@ const Wizzard = (props) => {
       };
     });
   };
-
-  console.log(formData, "JA SAM FORM DATA");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (page.length !== 1) {
-      navigate("/application/intro");
+  const selectedWizzardPage = () => {
+    if (step === 0) {
+      return (
+        <WizzardPage1
+          onForm1Submit={onForm1Submit}
+          setStep={setStep}
+          wizzard1Data={{
+            title: formData.title,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            dateOfBirth: formData.dateOfBirth,
+          }}
+        />
+      );
     }
-    if (!/[1 2 3]/.test(page)) {
-      navigate("/application/intro");
+    if (step === 1) {
+      return (
+        <WizzardPage2
+          onForm2Submit={onForm2Submit}
+          setStep={setStep}
+          wizzard2Data={{
+            email: formData.email,
+            address1: formData.address1,
+            address2: formData.address2,
+            country: formData.country,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            howManyYearsLived: formData.howManyYearsLived,
+          }}
+        />
+      );
     }
-    if (!inWizzard) {
-      navigate("/application/intro");
+    if (step === 2) {
+      return (
+        <WizzardPage3
+          onForm3Submit={onForm3Submit}
+          setStep={setStep}
+          setInWizzard={setInWizzard}
+          wizzard3Data={{
+            agriculturalSkills: formData.agriculturalSkills,
+            agriculturalSkillsDetails: formData.agriculturalSkillsDetails,
+            metalworkSkills: formData.metalworkSkills,
+            metalworkSkillsDetails: formData.metalworkSkillsDetails,
+            Marking: formData.Marking,
+            markingValue: formData.markingValue,
+            Cutting: formData.Cutting,
+            cuttingValue: formData.cuttingValue,
+            Drilling: formData.drillingValue,
+            CuttingThreads: formData.cuttingThreadsValue,
+            cuttingThreadsValue: formData.cuttingThreadsValue,
+            Filling: formData.Filling,
+            fillingValue: formData.fillingValue,
+            Joining: formData.Joining,
+            joiningValue: formData.joiningValue,
+            convicted: formData.convicted,
+            reasons: formData.reasons,
+            airplaneSkills: formData.airplaneSkills,
+            carSkills: formData.carSkills,
+            bicycleSkills: formData.bicycleSkills,
+          }}
+        />
+      );
     }
-  }, [page, navigate]);
-
-  const count = 3;
+  };
 
   return (
     <div className={classes.container}>
-      <WizzardLayout step={page} maxValue={count}>
-        {page === "1" && <WizzardPage1 onForm1Submit={onForm1Submit} />}
-        {page === "2" && <WizzardPage2 onForm2Submit={onForm2Submit} />}
-        {page === "3" && <WizzardPage3 onForm3Submit={onForm3Submit} />}
+      <WizzardLayout
+        step={step}
+        maxValue={steps.length}
+        stepCurrent={steps[step]}
+      >
+        {selectedWizzardPage()}
       </WizzardLayout>
     </div>
   );

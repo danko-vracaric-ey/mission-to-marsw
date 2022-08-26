@@ -29,8 +29,16 @@ const StartApplicationProccessPage = () => {
             path="intro"
             element={<WizzardIntroPage setInWizzard={setInWizzard} />}
           />
-
-          <Route path="/:page" element={<Wizzard inWizzard={inWizzard} />} />
+          {inWizzard && (
+            <Route
+              path="signup"
+              element={<Wizzard setInWizzard={setInWizzard} />}
+            />
+          )}
+          <Route
+            path="*"
+            element={<WizzardIntroPage setInWizzard={setInWizzard} />}
+          />
         </Routes>
       </div>
     </div>

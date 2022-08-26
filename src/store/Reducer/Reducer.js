@@ -6,6 +6,13 @@
  */
 
 const Reducer = (state, action) => {
+  if (action.type === "HANDLE_FOOTER_LINKS") {
+    return {
+      ...state,
+      shouldShow: action.payload.shouldShow,
+    };
+  }
+
   if (action.type === "ADD_FORM_INTRO_DATA") {
     return {
       ...state,

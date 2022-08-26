@@ -1,79 +1,106 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import classes from "./WizzardPage1.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
+import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 
 const WizzardPage1 = (props) => {
-  const { page } = useParams();
-  const { onForm1Submit } = props;
+  const { onForm1Submit, wizzard1Data } = props;
+  const { title, firstName, lastName, dateOfBirth } = wizzard1Data;
   const navigate = useNavigate();
 
   const [state, setState] = useState({
-    title: localStorage.getItem("title"),
-    firstName: localStorage.getItem("firstName"),
-    lastName: localStorage.getItem("lastName"),
-    dateOfBirth: localStorage.getItem("dateOfBirth"),
+    title: title,
+    firstName: firstName,
+    lastName: lastName,
+    dateOfBirth: dateOfBirth,
   });
-
-  let isFormValid = false;
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const selectHandler = (e) => {
-    localStorage.setItem("title", state.title);
     setState((prev) => ({ ...prev, title: e.target.value }));
   };
+  const {
+    onChangeFunc: onSelectChangeFunc,
+    onBlurFunc: onSelectBlurFunc,
+    isValid: selectIsValid,
+    isInvalid: selectInvalid,
+  } = useInput(
+    (val) => {
+      return val.trim() !== "Title" && val.trim() !== "";
+    },
+    selectHandler,
+    state.title
+  );
 
   const nameInputHandler = (e) => {
-    localStorage.setItem("firstName", state.firstName);
     setState((prev) => ({ ...prev, firstName: e.target.value }));
   };
   const {
     onChangeFunc: onNameChangeFunc,
     onBlurFunc: onNameBlurFunc,
-    enteredValue: enteredValueNameValue,
-    reset: resetNameValue,
     isValid: nameIsValid,
     isInvalid: nameInvalid,
-  } = useInput((val) => {
-    return val.length !== 0;
-  }, nameInputHandler);
+  } = useInput(
+    (val) => {
+      return val.trim() !== "" && val.length < 12;
+    },
+    nameInputHandler,
+    state.firstName
+  );
 
   const lastNameInputHandler = (e) => {
-    localStorage.setItem("lastName", state.lastName);
     setState((prev) => ({ ...prev, lastName: e.target.value }));
   };
   const {
     onChangeFunc: onLastNameChangeFunc,
     onBlurFunc: onLastNameBlurFunc,
-    enteredValue: enteredValueLastNameValue,
-    reset: resetLastNameValue,
     isValid: lastNameIsValid,
     isInvalid: lastNameInvalid,
-  } = useInput((val) => {
-    return val.length !== 0 && val.length < 15;
-  }, lastNameInputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0 && val.length < 15;
+    },
+    lastNameInputHandler,
+    state.lastName
+  );
 
   const dateInputHandler = (e) => {
-    localStorage.setItem("dateOfBirth", state.dateOfBirth);
     setState((prev) => ({ ...prev, dateOfBirth: e.target.value }));
   };
 
-  if (!nameInvalid && !lastNameInvalid) {
-    isFormValid = true;
-  }
+  const {
+    onChangeFunc: onDateChangeFunc,
+    onBlurFunc: onDateBlurFunc,
+    isValid: dateIsValid,
+    isInvalid: dateInvalid,
+  } = useInput(
+    (val) => {
+      return val.trim() !== "";
+    },
+    dateInputHandler,
+    state.dateOfBirth
+  );
 
-  const onSubmitHanlder = (e) => {
+  useEffect(() => {
+    if (nameIsValid && lastNameIsValid && selectIsValid && dateIsValid) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [selectIsValid, nameIsValid, lastNameIsValid, dateIsValid]);
+
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (!isFormValid) {
+    if (!formIsValid) {
       return;
     }
     onForm1Submit(state);
-
-    navigate(`/application/${page * 1 + 1}`);
+    setFormIsValid(true);
   };
 
   const onBackHandler = () => {
@@ -82,21 +109,20 @@ const WizzardPage1 = (props) => {
 
   return (
     <WizzardFormLayout>
-      <form
-        id="form1"
-        onSubmit={onSubmitHanlder}
-        className={classes.input_field}
-      >
+      <form id="form1" className={classes.input_field} autoComplete="off">
         <div className={classes.top}>
           <Select
             value2={state.title}
-            value={["Mr", "Miss", "Dr"]}
+            value={["Title", "Mr", "Miss", "Dr"]}
             name="Title"
             id="title"
             label="Please provide your title and name"
             notMandatory={false}
             className={classes.select_input_wrapper}
-            onChange={selectHandler}
+            onChange={onSelectChangeFunc}
+            onBlur={onSelectBlurFunc}
+            isInvalid={selectInvalid}
+            errorMessage="Please select your title!"
           />
 
           <div className={classes.first_last_wrapper}>
@@ -108,7 +134,10 @@ const WizzardPage1 = (props) => {
               onBlur={onNameBlurFunc}
               className={classes.input_name_wrapper}
               value={state.firstName}
+              isInvalid={nameInvalid}
+              errorMessage="Please enter a valid name!"
             />
+
             <Input
               className={classes.input_last_name_wrapper}
               type="text"
@@ -117,6 +146,8 @@ const WizzardPage1 = (props) => {
               onChange={onLastNameChangeFunc}
               onBlur={onLastNameBlurFunc}
               value={state.lastName}
+              isInvalid={lastNameInvalid}
+              errorMessage="Please enter a valid last name!"
             />
           </div>
         </div>
@@ -127,25 +158,23 @@ const WizzardPage1 = (props) => {
               name="date"
               label="What is your date of birth?"
               id="date"
-              onChange={dateInputHandler}
+              onChange={onDateChangeFunc}
+              onBlur={onDateBlurFunc}
               value={state.dateOfBirth}
+              isInvalid={dateInvalid}
+              errorMessage="Please enter a valid date!"
+              min="1960-12-31"
+              max="2000-12-31"
             />
           </div>
         </div>
       </form>
 
-      <WizzardButtonsLayout>
-        <div className={classes.button_back}>
-          <button type="button" onClick={onBackHandler}>
-            BACK
-          </button>
-        </div>
-        <div className={classes.button_continue}>
-          <button disabled={!isFormValid} form="form1" type="submit">
-            CONTINUE
-          </button>
-        </div>
-      </WizzardButtonsLayout>
+      <WizzardButtons
+        onClickBackHandler={onBackHandler}
+        onClickSubmitHandler={onSubmitHandler}
+        disabled={!formIsValid}
+      />
     </WizzardFormLayout>
   );
 };

@@ -31,6 +31,7 @@ function App() {
             path="/termsandcondition"
             element={<TermsAndConditionsPage />}
           />
+          <Route path="*" element={<LandingPage />}></Route>
         </Routes>
 
         <Footer></Footer>

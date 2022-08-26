@@ -1,0 +1,42 @@
+.button_back {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  button {
+    width: 90px;
+    border: 0px;
+    margin: 10px;
+    background-color: white;
+    padding: 13px;
+    cursor: pointer;
+  }
+}
+.button_continue {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px;
+  button {
+    background-color: rgba(46, 46, 48);
+    padding: 13px;
+    color: white;
+    border: 0px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: black;
+  }
+}
+
+.button_continue {
+  button:disabled,
+  button:disabled:hover,
+  button:disabled:active {
+    background-color: rgb(196, 196, 205);
+
+    cursor: not-allowed;
+  }
+}

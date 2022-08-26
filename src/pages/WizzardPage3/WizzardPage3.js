@@ -1,111 +1,74 @@
-import { useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import classes from "./WizzardPage3.module.scss";
 import InputRadio from "../../components/Wizzard/InputRadio/InputRadio";
 import useRadio from "../../hooks/useRadio";
 import InputCheckbox from "../../components/Wizzard/InputCheckbox/InputCheckbox";
-import Input from "../../components/Wizzard/Input/Input";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
-import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
+import useInput from "../../hooks/useInput";
+import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
+import ConvictedDetails from "../../components/Wizzard/ConvictedDetails/ConvictedDetails";
 
 const WizzardPage3 = (props) => {
-  const { onForm3Submit } = props;
+  const { onForm3Submit, setInWizzard, setStep, wizzard3Data } = props;
+  const {
+    agriculturalSkills,
+    agriculturalSkillsDetails,
+    metalworkSkills,
+    metalworkSkillsDetails,
+    Marking,
+    markingValue,
+    Cutting,
+    cuttingValue,
+    Drilling,
+    drillingValue,
+    CuttingThreads,
+    cuttingThreadsValue,
+    Filling,
+    fillingValue,
+    Joining,
+    joiningValue,
+    convicted,
+    reasons,
+    airplaneSkills,
+    carSkills,
+    bicycleSkills,
+  } = wizzard3Data;
 
-  let arrayOfValue = [];
-  let arrayOfValue2 = [];
-  let arrayOfValue3 = [
-    { what: "", when: "" },
-    { what: "", when: "" },
-    { what: "", when: "" },
-  ];
-
-  for (let i = 0; i < localStorage.length; i++) {
-    for (let j = 0; j < localStorage.length; j++) {
-      if (localStorage.key(i) === `what${j}`) {
-        arrayOfValue[j] = localStorage.getItem(localStorage.key(i));
-      }
-      if (localStorage.key(i) === `when${j}`) {
-        arrayOfValue2[j] = localStorage.getItem(localStorage.key(i));
-      }
-    }
-  }
-
-  let localStorageLength = localStorage.length;
-
-  for (let i = 0; i < arrayOfValue.length; i++) {
-    if (i === 0 && arrayOfValue3.length === 1) {
-      arrayOfValue3 = [{ what: arrayOfValue[i], when: arrayOfValue2[i] }];
-      continue;
-    }
-    arrayOfValue3 = [
-      ...arrayOfValue3,
-      { what: arrayOfValue[i], when: arrayOfValue2[i] },
-    ];
-  }
-
-  let removeStorageItems = () => {
-    for (let i = 0; i < localStorageLength; i++) {
-      for (let j = 0; j < localStorageLength; j++) {
-        if (localStorage.key(i) === `what${j}`) {
-          localStorage.removeItem(localStorage.key(i));
-        }
-        if (localStorage.key(i) === `when${j}`) {
-          localStorage.removeItem(localStorage.key(i));
-        }
-      }
-    }
-  };
-
-  const { page } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState({
-    agriculturalSkills: localStorage.getItem("agriculturalSkills")
-      ? localStorage.getItem("agriculturalSkills")
-      : "No",
-    agriculturalSkillsDetails: localStorage.getItem("agriculturalSkillsDetails")
-      ? localStorage.getItem("agriculturalSkillsDetails")
-      : "",
-    metalworkSkills: localStorage.getItem("metalworkSkills")
-      ? localStorage.getItem("metalworkSkills")
-      : "No",
-    metalworkSkillsDetails: localStorage.getItem("metalSkills"),
-    Marking: localStorage.getItem("Marking") === "true",
-    markingValue: localStorage.getItem("markingValue"),
-    Cutting: localStorage.getItem("Cutting") === "true",
-    cuttingValue: localStorage.getItem("cuttingValue"),
-    Drilling: localStorage.getItem("Drilling") === "true",
-    drillingValue: localStorage.getItem("drillingValue"),
-    CuttingThreads: localStorage.getItem("CuttingThreads") === "true",
-    cuttingThreadsValue: localStorage.getItem("cuttingThreadsValue"),
-    Filling: localStorage.getItem("Filling") === "true",
-    fillingValue: localStorage.getItem("fillingValue"),
-    Joining: localStorage.getItem("Joining") === "true",
-    joiningValue: localStorage.getItem("joiningValue"),
-    convicted: localStorage.getItem("convicted")
-      ? localStorage.getItem("convicted")
-      : "No",
-    reasons: arrayOfValue3,
-    airplaneSkills: localStorage.getItem("airplaneSkills")
-      ? localStorage.getItem("airplaneSkills")
-      : "No",
-    carSkills: localStorage.getItem("carSkills")
-      ? localStorage.getItem("carSkills")
-      : "No",
-    bicycleSkills: localStorage.getItem("bicycleSkills")
-      ? localStorage.getItem("bicycleSkills")
-      : "No",
+    agriculturalSkills: agriculturalSkills,
+    agriculturalSkillsDetails: agriculturalSkillsDetails,
+    metalworkSkills: metalworkSkills,
+    metalworkSkillsDetails: metalworkSkillsDetails,
+    Marking: Marking,
+    markingValue: markingValue,
+    Cutting: Cutting,
+    cuttingValue: cuttingValue,
+    Drilling: Drilling,
+    drillingValue: drillingValue,
+    CuttingThreads: CuttingThreads,
+    cuttingThreadsValue: cuttingThreadsValue,
+    Filling: Filling,
+    fillingValue: fillingValue,
+    Joining: Joining,
+    joiningValue: joiningValue,
+    convicted: convicted,
+    reasons: reasons,
+    errorMessageReasons: [],
+    airplaneSkills: airplaneSkills,
+    carSkills: carSkills,
+    bicycleSkills: bicycleSkills,
   });
 
-  const agriRef = useRef();
+  const [formIsValid, setFormIsValid] = useState(true);
 
   const agriculturalSkillsInputHandler = (e) => {
     setState((prev) => ({ ...prev, agriculturalSkills: e.target.value }));
-    localStorage.setItem("agriculturalSkills", e.target.value);
-    if (e.target.value == "No") {
-      localStorage.removeItem("agriculturalSkills");
-      localStorage.removeItem("agriculturalSkillsDetails");
+
+    if (e.target.value === "No") {
       setState((prev) => ({ ...prev, agriculturalSkills: "No" }));
       setState((prev) => ({ ...prev, agriculturalSkillsDetails: "" }));
     }
@@ -123,47 +86,40 @@ const WizzardPage3 = (props) => {
     state.agriculturalSkills
   );
 
-  const onBlurTextarea = () => {
-    localStorage.setItem("agriculturalSkillsDetails", agriRef.current.value);
+  const agriculturalSkillsDetailsInputHandler = (e) => {
     setState((prev) => ({
       ...prev,
-      agriculturalSkillsDetails: agriRef.current.value,
+      agriculturalSkillsDetails: e.target.value,
     }));
   };
-  const onChangeTextarea = (e) => {
-    const { value } = e.target;
 
-    localStorage.setItem("agriculturalSkillsDetails", value);
-  };
-  // --------------------------------------------------------
+  const {
+    onChangeFunc: onAgriculturalSkillsDetailsChangeFunc,
+    onBlurFunc: onAgriculturalSkillsDetailsBlurFunc,
+    isInvalid: agriculturalSkillsDetailsInvalid,
+  } = useInput(
+    (val) => {
+      return val.trim() !== "" && val.length < 50;
+    },
+    agriculturalSkillsDetailsInputHandler,
+    state.agriculturalSkillsDetails
+  );
+
   const metalworkSkillsInputHandler = (e) => {
     setState((prev) => ({ ...prev, metalworkSkills: e.target.value }));
-    localStorage.setItem("metalworkSkills", e.target.value);
-    if (e.target.value === "No") {
-      localStorage.removeItem("Marking");
-      localStorage.removeItem("markingValue");
-      localStorage.removeItem("Cutting");
-      localStorage.removeItem("cuttingValue");
-      localStorage.removeItem("Joining");
-      localStorage.removeItem("joiningValue");
-      localStorage.removeItem("Drilling");
-      localStorage.removeItem("drillingValue");
-      localStorage.removeItem("Filling");
-      localStorage.removeItem("fillingValue");
-      localStorage.removeItem("CuttingThreads");
-      localStorage.removeItem("cuttingThreadsValue");
 
-      setState((prev) => ({ ...prev, marking: false }));
+    if (e.target.value === "No") {
+      setState((prev) => ({ ...prev, Marking: false }));
       setState((prev) => ({ ...prev, markingValue: "" }));
-      setState((prev) => ({ ...prev, cutting: false }));
+      setState((prev) => ({ ...prev, Cutting: false }));
       setState((prev) => ({ ...prev, cuttingValue: "" }));
-      setState((prev) => ({ ...prev, joining: false }));
+      setState((prev) => ({ ...prev, Joining: false }));
       setState((prev) => ({ ...prev, joiningValue: "" }));
-      setState((prev) => ({ ...prev, drilling: false }));
+      setState((prev) => ({ ...prev, Drilling: false }));
       setState((prev) => ({ ...prev, drillingValue: "" }));
-      setState((prev) => ({ ...prev, filling: false }));
+      setState((prev) => ({ ...prev, Filling: false }));
       setState((prev) => ({ ...prev, fillinValue: "" }));
-      setState((prev) => ({ ...prev, cuttingThreads: false }));
+      setState((prev) => ({ ...prev, CuttingThreads: false }));
       setState((prev) => ({ ...prev, cuttingThreadsValue: "" }));
     }
   };
@@ -171,16 +127,12 @@ const WizzardPage3 = (props) => {
   const onMetalworkHandler = (e) => {
     const { name, value, checked } = e.target;
 
-    localStorage.removeItem(value);
-    localStorage.removeItem(name);
     setState((prev) => {
       const newObj = { ...prev };
       newObj[value] = !newObj[value];
       return newObj;
     });
     if (checked === true) {
-      localStorage.setItem(value, "true");
-      localStorage.setItem(name, value);
       setState((prev) => {
         const newObj = { ...prev };
         newObj[name] = value;
@@ -202,19 +154,13 @@ const WizzardPage3 = (props) => {
   );
 
   const convictedInputHandler = (e) => {
-    setState((prev) => ({ ...prev, covicted: e.target.value }));
-    localStorage.setItem("convicted", e.target.value);
+    setState((prev) => ({ ...prev, convicted: e.target.value }));
+
     if (e.target.value === "No") {
-      removeStorageItems();
-      localStorage.removeItem("convicted");
       setState((prev) => ({ ...prev, convicted: "No" }));
       setState((prev) => ({
         ...prev,
-        reasons: [
-          { what: "", when: "" },
-          { what: "", when: "" },
-          { what: "", when: "" },
-        ],
+        reasons: [{ whatName: "", whenName: "" }],
       }));
     }
   };
@@ -230,46 +176,73 @@ const WizzardPage3 = (props) => {
     state.convicted
   );
 
-  const onAddHandler = () => {
+  const reasonsListAddField = (actionType) => (event) => {
+    event.preventDefault();
+    let errorMessage = state.reasons.map((user, key) => {
+      let error = {};
+      let valid = true;
+
+      if (!user.whatName) {
+        error.errorwhatName = "What required";
+        valid = false;
+      } else {
+        error.errorwhatName = "";
+      }
+      if (!user.whenName) {
+        error.errorwhenName = "When required";
+        valid = false;
+      } else {
+        error.errorwhenName = "";
+      }
+
+      if (state.reasons.length - 1 === key && valid && actionType === "add") {
+        setState((prev) => {
+          return {
+            ...prev,
+            reasons: [...prev.reasons, { whatName: "", whenName: "" }],
+          };
+        });
+      }
+      return error;
+    });
     setState((prev) => ({
       ...prev,
-      reasons: [...prev.reasons, { what: "", when: "" }],
+      errorMessageReasons: errorMessage,
     }));
   };
 
-  const onRemoveHandler = () => {
-    setState((prev) => ({
-      ...prev,
-      reasons: [...prev.reasons].slice(0, prev.reasons.length - 1),
-    }));
+  const reasonsListHandleChange = (e) => {
+    let value = e.target.value;
+
+    if (["whatName", "whenName"].includes(e.target.name)) {
+      let reasonDetail = [...state.reasons];
+      reasonDetail[e.target.dataset.id][e.target.name] = e.target.value;
+      setState((prev) => {
+        return {
+          ...prev,
+          reasons: reasonDetail,
+        };
+      });
+    } else {
+      setState((prev) => {
+        return { ...prev, [e.target.name]: value.trim() };
+      });
+    }
   };
 
-  let buttonsContent;
-  if (state.reasons.length == 1) {
-    buttonsContent = (
-      <div className={classes.convicted_details_buttons_wrapper}>
-        <button onClick={onAddHandler}>+</button>
-      </div>
-    );
-  }
-
-  const handleChange = (i, e) => {
-    const { name, value } = e.target;
-
-    localStorage.setItem(`${name}${i}`, value);
+  const reasonsListRemoveField = (id) => (e) => {
+    e.preventDefault();
+    var reasons = state.reasons.filter((user, key) => key !== id);
     setState((prev) => {
-      let reasonsUpdated = [...prev.reasons];
-      reasonsUpdated[i] = { ...reasonsUpdated[i], [name]: value };
       return {
         ...prev,
-        reasons: reasonsUpdated,
+        reasons,
       };
     });
   };
 
   const airplaneSkillsInputHandler = (e) => {
     setState((prev) => ({ ...prev, airplaneSkills: e.target.value }));
-    localStorage.setItem("airplaneSkills", e.target.value);
   };
   const {
     isRadioSelected: isRadioSelectedAirplane,
@@ -283,7 +256,6 @@ const WizzardPage3 = (props) => {
   );
 
   const carSkillsInputHandler = (e) => {
-    localStorage.setItem("carSkills", e.target.value);
     setState((prev) => ({ ...prev, carSkills: e.target.value }));
   };
 
@@ -299,7 +271,6 @@ const WizzardPage3 = (props) => {
   );
 
   const bicycleSkillsInputHandler = (e) => {
-    localStorage.setItem("bicycleSkills", e.target.value);
     setState((prev) => ({ ...prev, bicycleSkills: e.target.value }));
   };
 
@@ -314,116 +285,154 @@ const WizzardPage3 = (props) => {
     state.bicycleSkills
   );
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    localStorage.setItem("metalSkills", state.metalworkSkillsDetails);
-    onForm3Submit(state);
+  useEffect(() => {
+    setFormIsValid(true);
+    if (
+      state.agriculturalSkills === "Yes" &&
+      state.agriculturalSkillsDetails === ""
+    ) {
+      setFormIsValid(false);
+    }
+    if (
+      state.metalworkSkills === "Yes" &&
+      !state.Cutting &&
+      !state.Marking &&
+      !state.Drilling &&
+      !state.CuttingThreads &&
+      !state.Joining &&
+      !state.Filling
+    ) {
+      setFormIsValid(false);
+    }
 
-    localStorage.clear();
+    if (
+      state.convicted === "Yes" &&
+      state.reasons.some((e, i, arr) => e.whatName === "" || e.whenName === "")
+    ) {
+      setFormIsValid(false);
+    }
+  }, [
+    state.agriculturalSkills,
+    state.agriculturalSkillsDetails,
+    state.metalworkSkills,
+    state.Cutting,
+    state.Marking,
+    state.Drilling,
+    state.CuttingThreads,
+    state.Joining,
+    state.Filling,
+    state.convicted,
+    state.reasons,
+  ]);
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+
+    onForm3Submit(state);
+    setInWizzard(false);
     navigate("/");
-    localStorage.setItem("isWizzardOpen", "false");
   };
 
   const onBackHandler = () => {
-    navigate(`/application/${page * 1 - 1}`);
+    setStep((prev) => prev - 1);
   };
 
   return (
     <WizzardFormLayout>
-      <form onSubmit={onSubmit} id="form3" className={classes.form}>
+      <form id="form3" className={classes.form}>
         <div className={classes.input_field}>
-          <div>
-            <InputRadio
-              label="Do you have any agricultural skills?"
-              value1="Yes"
-              value2="No"
-              isRadioSelected={isRadioSelectedAgricultural}
-              handleRadioClick={handleRadioClickAgricultural}
-              name="agricultural"
-              id1="yes-agricultural"
-              id2="no-agricultural"
-            />
-            {affirmativeAnswerAgricultural && (
-              <div className={classes.textarea_agri}>
-                <textarea
-                  ref={agriRef}
-                  onBlur={onBlurTextarea}
-                  defaultValue={state.agriculturalSkillsDetails}
-                  onChange={onChangeTextarea}
-                ></textarea>
+          <InputRadio
+            label="Do you have any agricultural skills?"
+            value1="Yes"
+            value2="No"
+            isRadioSelected={isRadioSelectedAgricultural}
+            handleRadioClick={handleRadioClickAgricultural}
+            name="agricultural"
+            id1="yes-agricultural"
+            id2="no-agricultural"
+          />
+          {affirmativeAnswerAgricultural && (
+            <div className={classes.textarea_agri}>
+              <textarea
+                onBlur={onAgriculturalSkillsDetailsBlurFunc}
+                onChange={onAgriculturalSkillsDetailsChangeFunc}
+                value={state.agriculturalSkillsDetails}
+              ></textarea>
+              {agriculturalSkillsDetailsInvalid && (
+                <p>Please enter more details</p>
+              )}
+            </div>
+          )}
+
+          <InputRadio
+            label="Do you have any metalwork skills?"
+            value1="Yes"
+            value2="No"
+            isRadioSelected={isRadioSelectedMetalwork}
+            handleRadioClick={handleRadioClickMetalwork}
+            name="metalwork"
+            id1="yes-metalwork"
+            id2="no-metalwork"
+          />
+          {affirmativeAnswerMetalwork && (
+            <div className={classes.bottom}>
+              <label htmlFor="checkbox">
+                <span>*</span>
+                What? Please select all that apply
+              </label>
+              <div className={classes.checkbox_container}>
+                <InputCheckbox
+                  value="Marking"
+                  id="marking"
+                  name="markingValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.Marking}
+                  label="Marking"
+                />
+                <InputCheckbox
+                  value="Cutting"
+                  id="cutting"
+                  name="cuttingValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.Cutting}
+                  label="Cutting"
+                />
+                <InputCheckbox
+                  value="Drilling"
+                  id="drilling"
+                  name="drillingValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.Drilling}
+                  label="Drilling"
+                />
+                <InputCheckbox
+                  value="CuttingThreads"
+                  id="cuttingThreads"
+                  name="cuttingThreadsValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.CuttingThreads}
+                  label="Cutting internal and external threads"
+                />
+                <InputCheckbox
+                  value="Filling"
+                  id="filling"
+                  name="fillingValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.Filling}
+                  label="Filling"
+                />
+                <InputCheckbox
+                  value="Joining"
+                  id="joining"
+                  name="joiningValue"
+                  onChange={onMetalworkHandler}
+                  checked={state.Joining}
+                  label="Joining"
+                />
               </div>
-            )}
-          </div>
-          <div className={classes.container}>
-            <InputRadio
-              label="Do you have any metalwork skills?"
-              value1="Yes"
-              value2="No"
-              isRadioSelected={isRadioSelectedMetalwork}
-              handleRadioClick={handleRadioClickMetalwork}
-              name="metalwork"
-              id1="yes-metalwork"
-              id2="no-metalwork   "
-            />
-            {affirmativeAnswerMetalwork && (
-              <div className={classes.bottom}>
-                <label htmlFor="checkbox">
-                  <span>*</span>
-                  What? Please select all that apply
-                </label>
-                <div className={classes.checkbox_container}>
-                  <InputCheckbox
-                    value="Marking"
-                    id="marking"
-                    name="markingValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.Marking}
-                    label="Marking"
-                  />
-                  <InputCheckbox
-                    value="Cutting"
-                    id="cutting"
-                    name="cuttingValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.Cutting}
-                    label="Cutting"
-                  />
-                  <InputCheckbox
-                    value="Drilling"
-                    id="drilling"
-                    name="drillingValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.Drilling}
-                    label="Drilling"
-                  />
-                  <InputCheckbox
-                    value="CuttingThreads"
-                    id="cuttingThreads"
-                    name="cuttingThreadsValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.CuttingThreads}
-                    label="Cutting internal and external threads"
-                  />
-                  <InputCheckbox
-                    value="Filling"
-                    id="filling"
-                    name="fillingValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.Filling}
-                    label="Filling"
-                  />
-                  <InputCheckbox
-                    value="Joining"
-                    id="joining"
-                    name="joiningValue"
-                    onChange={onMetalworkHandler}
-                    checked={state.Joining}
-                    label="Joining"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
+
           <div className={classes.convicted_container}>
             <InputRadio
               label="Have you ever been convicted?"
@@ -437,101 +446,13 @@ const WizzardPage3 = (props) => {
             />
             {affirmativeAnswerConvicted && (
               <div className={classes.convicted_bottom}>
-                <div className={classes.convicted_details_container}>
-                  {state.reasons.map((e, i, arr) => {
-                    if (i === 0) {
-                      return (
-                        <div
-                          key={i * 100}
-                          className={classes.convicted_details_wrapper}
-                        >
-                          <div
-                            className={classes.convicted_details_input_wrapper}
-                          >
-                            <Input
-                              label="For what?"
-                              id={`whatconv${Math.random() + i}`}
-                              name={`what`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].what}
-                            />
-                            <Input
-                              label="When?"
-                              id={`whenconv${Math.random() + i}`}
-                              name={`when`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].when}
-                            />
-                          </div>
-                          {buttonsContent}
-                        </div>
-                      );
-                    }
-                    if (i === arr.length - 1) {
-                      return (
-                        <div
-                          key={i * 100}
-                          className={classes.convicted_details_wrapper}
-                        >
-                          <div
-                            className={classes.convicted_details_input_wrapper}
-                          >
-                            <Input
-                              label="For what?"
-                              id={`whatconv${Math.random() + i}`}
-                              name={`what`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].what}
-                            />
-                            <Input
-                              label="When?"
-                              id={`whenconv${Math.random() + i}`}
-                              name={`when`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].when}
-                            />
-                          </div>
-
-                          <div
-                            className={
-                              classes.convicted_details_buttons_wrapper
-                            }
-                          >
-                            <button onClick={onRemoveHandler}>-</button>
-                            <button onClick={onAddHandler}>+</button>
-                          </div>
-                        </div>
-                      );
-                    }
-                    if (i > 0 && i < arr.length - 1) {
-                      return (
-                        <div
-                          key={i}
-                          className={classes.convicted_details_wrapper}
-                        >
-                          <div
-                            className={classes.convicted_details_input_wrapper}
-                          >
-                            <Input
-                              label="For what?"
-                              id={`whatconv${Math.random() + i}`}
-                              name={`what`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].what}
-                            />
-                            <Input
-                              label="When?"
-                              id={`whenconv${Math.random() + i}`}
-                              name={`when`}
-                              onChange={(e) => handleChange(i, e)}
-                              value={state.reasons[i].when}
-                            />
-                          </div>
-                        </div>
-                      );
-                    }
-                  })}
-                </div>
+                <ConvictedDetails
+                  reasons={state.reasons}
+                  errorMessageReasons={state.errorMessageReasons}
+                  reasonsListHandleChange={reasonsListHandleChange}
+                  reasonsListRemoveField={reasonsListRemoveField}
+                  reasonsListAddField={reasonsListAddField}
+                />
               </div>
             )}
           </div>
@@ -567,18 +488,12 @@ const WizzardPage3 = (props) => {
           />
         </div>
       </form>
-      <WizzardButtonsLayout>
-        <div className={classes.button_back}>
-          <button type="button" onClick={onBackHandler}>
-            BACK
-          </button>
-        </div>
-        <div className={classes.button_continue}>
-          <button disabled={false} form="form3" type="submit">
-            CONTINUE
-          </button>
-        </div>
-      </WizzardButtonsLayout>
+      <WizzardButtons
+        onClickBackHandler={onBackHandler}
+        onClickSubmitHandler={onSubmitHandler}
+        disabled={!formIsValid}
+        buttonText="SUBMIT"
+      />
     </WizzardFormLayout>
   );
 };

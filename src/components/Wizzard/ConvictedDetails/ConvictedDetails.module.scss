@@ -1,0 +1,17 @@
+.convicted_details_wrapper {
+  display: flex;
+}
+.convicted_details_input_wrapper {
+  display: flex;
+}
+
+.convicted_details_buttons_wrapper {
+  display: flex;
+  align-items: center;
+
+  padding-top: 10px;
+  button {
+    width: 20px;
+    margin: 2px;
+  }
+}

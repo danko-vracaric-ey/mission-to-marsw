@@ -1,164 +1,191 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import classes from "./WizzardPage2.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
-import WizzardButtonsLayout from "../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
+import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 
 const WizzardPage2 = (props) => {
-  const { page } = useParams();
-  const { onForm2Submit } = props;
-  const navigate = useNavigate();
+  const { onForm2Submit, setStep, wizzard2Data } = props;
+  const {
+    email,
+    address1,
+    address2,
+    country,
+    city,
+    postalCode,
+    howManyYearsLived,
+  } = wizzard2Data;
 
   const [state, setState] = useState({
-    email: localStorage.getItem("email"),
-    address1: localStorage.getItem("address1"),
-    address2: localStorage.getItem("address2"),
-    state: localStorage.getItem("state") ? localStorage.getItem("state") : "",
-    city: localStorage.getItem("city"),
-    postalCode: localStorage.getItem("postalCode")
-      ? localStorage.getItem("postalCode")
-      : "",
-    howManyYearsLived: localStorage.getItem("howManyYearsLived"),
+    email: email,
+    address1: address1,
+    address2: address2,
+    country: country,
+    city: city,
+    postalCode: postalCode,
+    howManyYearsLived: howManyYearsLived,
   });
 
-  let isFormValid = false;
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const emailInputHandler = (e) => {
-    localStorage.setItem("email", state.email);
-
     setState((prev) => ({ ...prev, email: e.target.value }));
   };
   const {
     onChangeFunc: emailChangeFunc,
     onBlurFunc: emailBlurFunc,
-    enteredValue: enteredEmailValue,
-    reset: resetEmailValue,
     isValid: emailIsValid,
     isInvalid: emailInvalid,
-  } = useInput((val) => {
-    return val
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  }, emailInputHandler);
+  } = useInput(
+    (val) => {
+      return val.trim() !== "" && val.includes("@");
+    },
+    emailInputHandler,
+    state.email
+  );
 
   const address1InputHandler = (e) => {
-    localStorage.setItem("address1", state.address1);
-
     setState((prev) => ({ ...prev, address1: e.target.value }));
   };
   const {
     onChangeFunc: address1ChangeFunc,
     onBlurFunc: address1BlurFunc,
-    enteredValue: address1Value,
-    reset: resetAddress1Value,
     isValid: address1IsValid,
     isInvalid: address1Invalid,
-  } = useInput((val) => {
-    return val.length !== 0;
-  }, address1InputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0;
+    },
+    address1InputHandler,
+    state.address1
+  );
 
   const address2InputHandler = (e) => {
-    localStorage.setItem("address2", state.address2);
     setState((prev) => ({ ...prev, address2: e.target.value }));
   };
   const {
     onChangeFunc: address2ChangeFunc,
     onBlurFunc: address2BlurFunc,
-    enteredValue: address2Value,
-    reset: resetAddress2Value,
     isValid: address2IsValid,
     isInvalid: address2Invalid,
-  } = useInput((val) => {
-    return val.length !== 0;
-  }, address2InputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0;
+    },
+    address2InputHandler,
+    state.address2
+  );
 
   const selectHandler = (e) => {
-    localStorage.setItem("state", state.state);
     setState((prev) => ({
       ...prev,
-      state: e.target.value,
+      country: e.target.value,
     }));
   };
 
+  const {
+    onChangeFunc: selectChangeFunc,
+    onBlurFunc: selectBlurFunc,
+    isValid: selectIsValid,
+    isInvalid: selectInvalid,
+  } = useInput(
+    (val) => {
+      return val.trim() !== "Country" && val.trim() !== "";
+    },
+    selectHandler,
+    state.country
+  );
+
   const cityInputHandler = (e) => {
-    localStorage.setItem("city", state.city);
     setState((prev) => ({ ...prev, city: e.target.value }));
   };
   const {
     onChangeFunc: cityChangeFunc,
     onBlurFunc: cityBlurFunc,
-    enteredValue: cityValue,
-    reset: resetCityValue,
     isValid: cityIsValid,
     isInvalid: cityInvalid,
-  } = useInput((val) => {
-    return val.length !== 0;
-  }, cityInputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0;
+    },
+    cityInputHandler,
+    state.city
+  );
 
   const postalCodeInputHandler = (e) => {
-    localStorage.setItem("postalCode", state.postalCode);
     setState((prev) => ({ ...prev, postalCode: e.target.value }));
   };
   const {
     onChangeFunc: postalCodeChangeFunc,
     onBlurFunc: postalCodeBlurFunc,
-    enteredValue: postalCodeValue,
-    reset: resetPostalCodeValue,
     isValid: postalCodeIsValid,
     isInvalid: postalCodeInvalid,
-  } = useInput((val) => {
-    return val.length !== 0 && val !== "Zip";
-  }, postalCodeInputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0 && val !== "Zip";
+    },
+    postalCodeInputHandler,
+    state.postalCode
+  );
 
   const howLongLivedInputHandler = (e) => {
-    localStorage.setItem("howManyYearsLived", state.howManyYearsLived);
     setState((prev) => ({ ...prev, howManyYearsLived: e.target.value }));
   };
   const {
     onChangeFunc: howLongLivedChangeFunc,
     onBlurFunc: howLongLivedBlurFunc,
-    enteredValue: howLongLivedValue,
-    reset: resetHowLongLivedValue,
     isValid: howLongLivedIsValid,
     isInvalid: howLongLivedInvalid,
-  } = useInput((val) => {
-    return val.length !== 0;
-  }, howLongLivedInputHandler);
+  } = useInput(
+    (val) => {
+      return val.length !== 0;
+    },
+    howLongLivedInputHandler,
+    state.howManyYearsLived
+  );
 
-  if (
-    !emailInvalid &&
-    !address1Invalid &&
-    !address2Invalid &&
-    !state.state !== "" &&
-    !cityInvalid &&
-    !postalCodeInvalid
-  ) {
-    isFormValid = true;
-  }
+  useEffect(() => {
+    if (
+      emailIsValid &&
+      address1IsValid &&
+      address2IsValid &&
+      selectIsValid &&
+      cityIsValid &&
+      postalCodeIsValid &&
+      howLongLivedIsValid
+    ) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [
+    emailIsValid,
+    address1IsValid,
+    address2IsValid,
+    cityIsValid,
+    selectIsValid,
+    postalCodeIsValid,
+    howLongLivedIsValid,
+  ]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (!isFormValid) {
+    if (!formIsValid) {
       return;
     }
     onForm2Submit(state);
-
-    navigate(`/application/${page * 1 + 1}`);
   };
 
   const onBackHandler = () => {
-    navigate(`/application/${page * 1 - 1}`);
+    setStep((prev) => prev - 1);
   };
 
   return (
     <WizzardFormLayout>
-      <form id="form2" className={classes.form} onSubmit={onSubmitHandler}>
+      <form id="form2" className={classes.form} autoComplete="off">
         <div className={classes.input_field}>
           <Input
             type="text"
@@ -169,6 +196,8 @@ const WizzardPage2 = (props) => {
             onChange={emailChangeFunc}
             onBlur={emailBlurFunc}
             className={classes.email}
+            isInvalid={emailInvalid}
+            errorMessage="Please enter a valid email!"
           />
 
           <div className={classes.address_wrapper}>
@@ -181,6 +210,8 @@ const WizzardPage2 = (props) => {
                 label="Address line 1"
                 onChange={address1ChangeFunc}
                 onBlur={address1BlurFunc}
+                isInvalid={address1Invalid}
+                errorMessage="Please enter a valid address"
               />
             </div>
             <div className={classes.address}>
@@ -193,20 +224,25 @@ const WizzardPage2 = (props) => {
                 notMandatory={true}
                 onChange={address2ChangeFunc}
                 onBlur={address2BlurFunc}
+                isInvalid={address2Invalid}
+                errorMessage="Please enter a valid adress"
               />
             </div>
           </div>
           <div className={classes.bottom}>
             <div className={classes.state_city}>
               <Select
-                value={["Serbia", "Germany", "France"]}
+                value={["Country", "Serbia", "Germany", "France"]}
                 id="state"
                 name="State"
-                value2={state.state}
+                value2={state.country}
                 notMandatory={false}
                 label="State"
+                onChange={selectChangeFunc}
+                onBlur={selectBlurFunc}
                 className={classes.select_city}
-                onChange={selectHandler}
+                isInvalid={selectInvalid}
+                errorMessage="Please, select a state!"
               />
               <Input
                 type="text"
@@ -215,9 +251,11 @@ const WizzardPage2 = (props) => {
                 value={state.city}
                 label="City/Town"
                 className={classes.city}
-                disabled={state.state === "" ? true : false}
+                disabled={state.country === "" ? true : false}
                 onChange={cityChangeFunc}
                 onBlur={cityBlurFunc}
+                isInvalid={cityInvalid}
+                errorMessage="Please enter a city"
               />
               <Input
                 type="text"
@@ -229,6 +267,8 @@ const WizzardPage2 = (props) => {
                 disabled={state.city !== "" ? false : true}
                 onChange={postalCodeChangeFunc}
                 onBlur={postalCodeBlurFunc}
+                isInvalid={postalCodeInvalid}
+                errorMessage="Please enter a valid postal code"
               />
             </div>
             <Input
@@ -240,22 +280,17 @@ const WizzardPage2 = (props) => {
               className={classes.time}
               onChange={howLongLivedChangeFunc}
               onBlur={howLongLivedBlurFunc}
+              isInvalid={howLongLivedInvalid}
+              errorMessage="Please enter how long you lived here"
             />
           </div>
         </div>
       </form>
-      <WizzardButtonsLayout>
-        <div className={classes.button_back}>
-          <button type="button" onClick={onBackHandler}>
-            BACK
-          </button>
-        </div>
-        <div className={classes.button_continue}>
-          <button disabled={false} form="form2" type="submit">
-            CONTINUE
-          </button>
-        </div>
-      </WizzardButtonsLayout>
+      <WizzardButtons
+        onClickBackHandler={onBackHandler}
+        onClickSubmitHandler={onSubmitHandler}
+        disabled={!formIsValid}
+      />
     </WizzardFormLayout>
   );
 };

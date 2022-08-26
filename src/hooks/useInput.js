@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
-const useInput = (validity, setStateWizzard) => {
-  const [enteredValue, setEnteredValue] = useState("");
+const useInput = (validity, setStateWizzard, enteredValue) => {
   const [isTouched, setIsTouched] = useState(false);
   const ref = useRef();
 
@@ -8,19 +7,19 @@ const useInput = (validity, setStateWizzard) => {
   const isInvalid = !isValid && isTouched;
 
   const onChangeFunc = (val) => {
-    setEnteredValue(val.target.value);
+    // setEnteredValue(val.target.value);
     setIsTouched(true);
     setStateWizzard(val);
   };
 
   const onBlurFunc = (val) => {
-    setEnteredValue(val.target.value);
-    setIsTouched(false);
+    // setEnteredValue(val.target.value);
+    setIsTouched(true);
     setStateWizzard(val);
   };
 
   const reset = () => {
-    setEnteredValue("");
+    // setEnteredValue("");
     setIsTouched(false);
   };
   return {

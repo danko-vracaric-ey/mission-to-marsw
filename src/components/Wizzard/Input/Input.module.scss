@@ -1,5 +1,6 @@
 .first_input_wrapper {
   padding: 5px;
+  width: 100%;
 
   input {
     width: 100%;
@@ -16,5 +17,16 @@
   padding-top: 5px;
   span {
     color: orange;
+  }
+}
+
+.name_input_wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  p {
+    font-size: x-small;
+    color: red;
   }
 }

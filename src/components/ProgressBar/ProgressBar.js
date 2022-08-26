@@ -5,8 +5,7 @@ const ProgressBar = (props) => {
   if (props.maxValue <= 3) {
     barFillWidth = Math.ceil(props.value * 33.3) + "%";
   }
-  console.log(props.maxValue);
-  console.log(barFillWidth);
+
   return (
     <div className={classes.container}>
       <div className={classes.first}>

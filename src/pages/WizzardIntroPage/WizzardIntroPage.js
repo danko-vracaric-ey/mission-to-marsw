@@ -1,51 +1,50 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import classes from "./WizzardIntroPage.module.scss";
-import { Contex } from "../../store/Store";
 
 const WizzardIntroPage = (props) => {
   const { setInWizzard } = props;
-  const ctx = useContext(Contex);
-  const applicationData = ctx;
   const [state, setState] = useState({
     isWizzardOpen: false,
-    read: localStorage.getItem("read") === "true",
-    agree: localStorage.getItem("agree") === "true",
+    read: false,
+    agree: false,
   });
+
+  const [formIsValid, setFormIsValid] = useState(false);
+
+  let navigate = useNavigate();
 
   const onReadHandler = (e) => {
     setState((prev) => {
+      if (prev.read === false) {
+      }
       return { ...prev, read: !prev.read };
     });
   };
   const onAgreeHandler = (e) => {
     setState((prev) => {
+      if (prev.agree === false) {
+      }
       return { ...prev, agree: !prev.agree };
     });
   };
 
-  let navigate = useNavigate();
+  useEffect(() => {
+    if (state.read && state.agree) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [state.read, state.agree]);
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (state.read && state.agree) {
-      setInWizzard(true);
-      localStorage.setItem("isWizzardOpen", true);
-      localStorage.setItem("read", true);
-      localStorage.setItem("agree", true);
-      ctx.dispatch({
-        type: "ADD_FORM_INTRO_DATA",
-        payload: {
-          isWizzardOpen: true,
-          read: state.read,
-          agree: state.agree,
-        },
-      });
-      setInWizzard(true);
-      localStorage.setItem("isWizzardOpen", "true");
-      navigate("/application/1");
+    if (!formIsValid) {
+      return;
     }
+    setInWizzard(true);
+    navigate("/application/signup");
   };
   return (
     <div className={classes.container}>
@@ -89,10 +88,7 @@ const WizzardIntroPage = (props) => {
             </div>
           </div>
           <div className={classes.button_wrapper}>
-            <button
-              disabled={!state.read || !state.agree}
-              className={classes.procede}
-            >
+            <button disabled={!formIsValid} className={classes.procede}>
               PROCEDE
             </button>
           </div>
