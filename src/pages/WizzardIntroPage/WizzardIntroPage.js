@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import classes from "./WizzardIntroPage.module.scss";
+import { Contex } from "../../store/Store";
 
 const WizzardIntroPage = (props) => {
+  const ctx = useContext(Contex);
   const { setInWizzard } = props;
+
   const [state, setState] = useState({
     isWizzardOpen: false,
     read: false,
@@ -43,6 +46,10 @@ const WizzardIntroPage = (props) => {
     if (!formIsValid) {
       return;
     }
+    ctx.dispatch({
+      type: "CLEAR_FORM_DATA",
+    });
+
     setInWizzard(true);
     navigate("/application/signup");
   };

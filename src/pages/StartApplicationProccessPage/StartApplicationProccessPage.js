@@ -1,10 +1,9 @@
-import { Routes, Route, useParams } from "react-router-dom";
-import { useState, useContext } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
 
 import classes from "./StartApplicationProccessPage.module.scss";
 import WizzardIntroPage from "../WizzardIntroPage/WizzardIntroPage";
 import Wizzard from "../../components/Wizzard/Wizzard";
-import { Contex } from "../../store/Store";
 
 /**
  * Page where user can start their application process
@@ -13,10 +12,7 @@ import { Contex } from "../../store/Store";
  */
 
 const StartApplicationProccessPage = () => {
-  const applicationData = useContext(Contex);
-  const [inWizzard, setInWizzard] = useState(
-    localStorage.getItem("isWizzardOpen") === "true"
-  );
+  const [inWizzard, setInWizzard] = useState(false);
 
   return (
     <div className={classes.container}>

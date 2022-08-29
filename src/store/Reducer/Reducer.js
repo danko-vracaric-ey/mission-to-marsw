@@ -1,3 +1,5 @@
+import { initialState } from "../Store";
+
 /**
  * A reducer function used for computing logic of the Store
  * @param {object} state Current state of the app
@@ -6,20 +8,8 @@
  */
 
 const Reducer = (state, action) => {
-  if (action.type === "HANDLE_FOOTER_LINKS") {
-    return {
-      ...state,
-      shouldShow: action.payload.shouldShow,
-    };
-  }
-
-  if (action.type === "ADD_FORM_INTRO_DATA") {
-    return {
-      ...state,
-      isWizzardOpen: action.payload.isWizzardOpen,
-      read: action.payload.read,
-      agree: action.payload.agree,
-    };
+  if (action.type === "CLEAR_FORM_DATA") {
+    return initialState;
   }
   if (action.type === "ADD_FORM1_DATA") {
     return {
@@ -41,7 +31,7 @@ const Reducer = (state, action) => {
         email: action.payload.email,
         address1: action.payload.address1,
         address2: action.payload.address2,
-        state: action.payload.state,
+        country: action.payload.country,
         city: action.payload.city,
         postalCode: action.payload.postalCode,
         howManyYearsLived: action.payload.howManyYearsLived,

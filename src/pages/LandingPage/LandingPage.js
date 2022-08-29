@@ -32,12 +32,7 @@ const LandingPage = () => {
     `https://api.nasa.gov/planetary/apod?count=${count}&api_key=${process.env.REACT_APP_API_KEY}`
   );
   useEffect(() => {
-    dispatch({
-      type: "HANDLE_FOOTER_LINKS",
-      payload: {
-        shouldShow: true,
-      },
-    });
+    console.log(ctx.state.applicationInfo);
     getImageOfTheDay(setData);
   }, [getImageOfTheDay]);
 

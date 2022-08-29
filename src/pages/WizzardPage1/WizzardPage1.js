@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
@@ -7,17 +7,19 @@ import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
+import { Contex } from "../../store/Store";
 
 const WizzardPage1 = (props) => {
-  const { onForm1Submit, wizzard1Data } = props;
-  const { title, firstName, lastName, dateOfBirth } = wizzard1Data;
+  const { onForm1Submit } = props;
   const navigate = useNavigate();
+  const ctx = useContext(Contex);
+  const wizardData = ctx.state.applicationInfo;
 
   const [state, setState] = useState({
-    title: title,
-    firstName: firstName,
-    lastName: lastName,
-    dateOfBirth: dateOfBirth,
+    title: wizardData.title,
+    firstName: wizardData.firstName,
+    lastName: wizardData.lastName,
+    dateOfBirth: wizardData.dateOfBirth,
   });
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -99,6 +101,16 @@ const WizzardPage1 = (props) => {
     if (!formIsValid) {
       return;
     }
+    ctx.dispatch({
+      type: "ADD_FORM1_DATA",
+      payload: {
+        title: state.title,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        dateOfBirth: state.dateOfBirth,
+      },
+    });
+
     onForm1Submit(state);
     setFormIsValid(true);
   };

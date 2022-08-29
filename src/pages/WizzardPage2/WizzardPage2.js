@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import classes from "./WizzardPage2.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
@@ -6,28 +6,24 @@ import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
+import { Contex } from "../../store/Store";
 
 const WizzardPage2 = (props) => {
-  const { onForm2Submit, setStep, wizzard2Data } = props;
-  const {
-    email,
-    address1,
-    address2,
-    country,
-    city,
-    postalCode,
-    howManyYearsLived,
-  } = wizzard2Data;
+  const { onForm2Submit, setStep } = props;
+  const ctx = useContext(Contex);
+  const wizardData = ctx.state.applicationInfo;
 
   const [state, setState] = useState({
-    email: email,
-    address1: address1,
-    address2: address2,
-    country: country,
-    city: city,
-    postalCode: postalCode,
-    howManyYearsLived: howManyYearsLived,
+    email: wizardData.email,
+    address1: wizardData.address1,
+    address2: wizardData.address2,
+    country: wizardData.country,
+    city: wizardData.city,
+    postalCode: wizardData.postalCode,
+    howManyYearsLived: wizardData.howManyYearsLived,
   });
+
+  console.log(state.country);
 
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -176,6 +172,19 @@ const WizzardPage2 = (props) => {
     if (!formIsValid) {
       return;
     }
+
+    ctx.dispatch({
+      type: "ADD_FORM2_DATA",
+      payload: {
+        email: state.email,
+        address1: state.address1,
+        address2: state.address2,
+        country: state.country,
+        city: state.city,
+        postalCode: state.postalCode,
+        howManyYearsLived: state.howManyYearsLived,
+      },
+    });
     onForm2Submit(state);
   };
 

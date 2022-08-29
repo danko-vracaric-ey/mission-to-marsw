@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import classes from "./WizzardPage3.module.scss";
@@ -9,59 +9,41 @@ import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout"
 import useInput from "../../hooks/useInput";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 import ConvictedDetails from "../../components/Wizzard/ConvictedDetails/ConvictedDetails";
+import { Contex } from "../../store/Store";
 
 const WizzardPage3 = (props) => {
-  const { onForm3Submit, setInWizzard, setStep, wizzard3Data } = props;
-  const {
-    agriculturalSkills,
-    agriculturalSkillsDetails,
-    metalworkSkills,
-    metalworkSkillsDetails,
-    Marking,
-    markingValue,
-    Cutting,
-    cuttingValue,
-    Drilling,
-    drillingValue,
-    CuttingThreads,
-    cuttingThreadsValue,
-    Filling,
-    fillingValue,
-    Joining,
-    joiningValue,
-    convicted,
-    reasons,
-    airplaneSkills,
-    carSkills,
-    bicycleSkills,
-  } = wizzard3Data;
+  const { onForm3Submit, setInWizzard, setStep } = props;
+
+  const ctx = useContext(Contex);
+  const wizardData = ctx.state.applicationInfo;
 
   const navigate = useNavigate();
 
   const [state, setState] = useState({
-    agriculturalSkills: agriculturalSkills,
-    agriculturalSkillsDetails: agriculturalSkillsDetails,
-    metalworkSkills: metalworkSkills,
-    metalworkSkillsDetails: metalworkSkillsDetails,
-    Marking: Marking,
-    markingValue: markingValue,
-    Cutting: Cutting,
-    cuttingValue: cuttingValue,
-    Drilling: Drilling,
-    drillingValue: drillingValue,
-    CuttingThreads: CuttingThreads,
-    cuttingThreadsValue: cuttingThreadsValue,
-    Filling: Filling,
-    fillingValue: fillingValue,
-    Joining: Joining,
-    joiningValue: joiningValue,
-    convicted: convicted,
-    reasons: reasons,
+    agriculturalSkills: wizardData.agriculturalSkills,
+    agriculturalSkillsDetails: wizardData.agriculturalSkillsDetails,
+    metalworkSkills: wizardData.metalworkSkills,
+    metalworkSkillsDetails: wizardData.metalworkSkillsDetails,
+    Marking: wizardData.Marking,
+    markingValue: wizardData.markingValue,
+    Cutting: wizardData.Cutting,
+    cuttingValue: wizardData.cuttingValue,
+    Drilling: wizardData.Drilling,
+    drillingValue: wizardData.drillingValue,
+    CuttingThreads: wizardData.CuttingThreads,
+    cuttingThreadsValue: wizardData.cuttingThreadsValue,
+    Filling: wizardData.Filling,
+    fillingValue: wizardData.fillingValue,
+    Joining: wizardData.Joining,
+    joiningValue: wizardData.joiningValue,
+    convicted: wizardData.convicted,
+    reasons: wizardData.reasons,
     errorMessageReasons: [],
-    airplaneSkills: airplaneSkills,
-    carSkills: carSkills,
-    bicycleSkills: bicycleSkills,
+    airplaneSkills: wizardData.airplaneSkills,
+    carSkills: wizardData.carSkills,
+    bicycleSkills: wizardData.bicycleSkills,
   });
+  console.log(wizardData);
 
   const [formIsValid, setFormIsValid] = useState(true);
 
@@ -328,6 +310,32 @@ const WizzardPage3 = (props) => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
+    ctx.dispatch({
+      type: "ADD_FORM3_DATA",
+      payload: {
+        agriculturalSkills: state.agriculturalSkills,
+        agriculturalSkillsDetails: state.agriculturalSkillsDetails,
+        metalworkSkills: state.metalworkSkills,
+        metalworkSkillsDetails: state.metalworkSkillsDetails,
+        Marking: state.Marking,
+        markingValue: state.markingValue,
+        Cutting: state.Cutting,
+        cuttingValue: state.cuttingValue,
+        Drilling: state.Drilling,
+        drillingValue: state.drillingValue,
+        CuttingThreads: state.CuttingThreads,
+        cuttingThreadsValue: state.cuttingThreadsValue,
+        Filling: state.Filling,
+        fillingValue: state.fillingValue,
+        Joining: state.Joining,
+        joiningValue: state.joiningValue,
+        convicted: state.convicted,
+        reasons: state.reasons,
+        airplaneSkills: state.airplaneSkills,
+        carSkills: state.carSkills,
+        bicycleSkills: state.bicycleSkills,
+      },
+    });
     onForm3Submit(state);
     setInWizzard(false);
     navigate("/");

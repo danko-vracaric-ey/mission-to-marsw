@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import classes from "./Footer.module.scss";
 import HeaderAndFooterLayout from "../../layout/HeaderAndFooterLayout/HeaderAndFooterLayout";
@@ -7,7 +7,6 @@ import {
   FOOTER_PRIVACY_NOTICE_LINK_TEXT,
   FOOTER_TERMS_AND_CONDITIONS_LINK_TEXT,
 } from "../../static";
-import { Contex } from "../../store/Store";
 
 /**
  * Standard Footer with links that lead to important information concerning using the app
@@ -15,10 +14,16 @@ import { Contex } from "../../store/Store";
  */
 
 const Footer = () => {
-  const ctx = useContext(Contex);
-  const { state } = ctx;
+  const location = useLocation();
 
-  const shouldShow = state.shouldShow;
+  const [shouldShow, setShouldShow] = useState(true);
+
+  useEffect(() => {
+    setShouldShow(true);
+    if (location.pathname === "/application/signup") {
+      setShouldShow(false);
+    }
+  }, [location.pathname, shouldShow]);
 
   let landingFooterLinks = (
     <div className={classes.wrapper}>
