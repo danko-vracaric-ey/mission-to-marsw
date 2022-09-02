@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import classes from "./WizzardPage3.module.scss";
 import InputRadio from "../../components/Wizzard/InputRadio/InputRadio";
@@ -10,42 +11,84 @@ import useInput from "../../hooks/useInput";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 import ConvictedDetails from "../../components/Wizzard/ConvictedDetails/ConvictedDetails";
 import { Contex } from "../../store/Store";
+import { metalworkSkillsInitialState } from "../../store/Store";
+import {
+  WIZARD_PAGE_3_AGRICULTURAL_SKILLS_LABEL,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING_THREADS_LABEL,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_DRILLING,
+  WIZARD_PAGE_3_INPUT_RADIO_VALUE_1,
+  WIZARD_PAGE_3_INPUT_RADIO_VALUE_2,
+  WIZARD_PAGE_3_METALWORK_SKILLS_LABEL,
+  WIZARD_PAGE_3_TEXT_AREA_ERROR_MESSAGE,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_FILLING,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING_THREADS,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_JOINING,
+  WIZARD_PAGE_3_INPUT_CHECKBOX_MARKING,
+  WIZARD_PAGE_3_CONVICTED_LABEL,
+  WIZARD_PAGE_3_AIRPLANE_LABEL,
+  WIZARD_PAGE_3_CAR_LABEL,
+  WIZARD_PAGE_3_BICYCLE_LABEL,
+  WIZARD_BUTTON_SUBMIT,
+} from "../../static";
+import useAxios from "../../hooks/useAxios";
+import SubmitModal from "../../components/Wizzard/SubmitModal/SubmitModal";
+
+/**
+ * Third page that users lands on after successfully submitting data in second page and makes final sign up submission
+ *
+ * @param {object} props A function handling wizard rendering path
+ * @returns {JSX} Wizard page three form and submit modal
+ */
 
 const WizzardPage3 = (props) => {
-  const { onForm3Submit, setInWizzard, setStep } = props;
+  const { setInWizzard, setStep } = props;
 
   const ctx = useContext(Contex);
-  const wizardData = ctx.state.applicationInfo;
+  const wizardData = ctx.state;
 
   const navigate = useNavigate();
 
   const [state, setState] = useState({
-    agriculturalSkills: wizardData.agriculturalSkills,
-    agriculturalSkillsDetails: wizardData.agriculturalSkillsDetails,
-    metalworkSkills: wizardData.metalworkSkills,
-    metalworkSkillsDetails: wizardData.metalworkSkillsDetails,
-    Marking: wizardData.Marking,
-    markingValue: wizardData.markingValue,
-    Cutting: wizardData.Cutting,
-    cuttingValue: wizardData.cuttingValue,
-    Drilling: wizardData.Drilling,
-    drillingValue: wizardData.drillingValue,
-    CuttingThreads: wizardData.CuttingThreads,
-    cuttingThreadsValue: wizardData.cuttingThreadsValue,
-    Filling: wizardData.Filling,
-    fillingValue: wizardData.fillingValue,
-    Joining: wizardData.Joining,
-    joiningValue: wizardData.joiningValue,
-    convicted: wizardData.convicted,
-    reasons: wizardData.reasons,
+    agriculturalSkills: "",
+    agriculturalSkillsDetails: "",
+    metalworkSkills: "",
+    metalworkSkillsDetails: [],
+    Marking: false,
+    markingValue: "",
+    Cutting: false,
+    cuttingValue: "",
+    Drilling: false,
+    drillingValue: "",
+    CuttingThreads: false,
+    cuttingThreadsValue: "",
+    Filling: false,
+    fillingValue: "",
+    Joining: false,
+    joiningValue: "",
+    convicted: "",
+    convictions: [{ forWhat: "", convictionDate: "" }],
     errorMessageReasons: [],
-    airplaneSkills: wizardData.airplaneSkills,
-    carSkills: wizardData.carSkills,
-    bicycleSkills: wizardData.bicycleSkills,
+    airplaneSkills: "",
+    carSkills: "",
+    bicycleSkills: "",
   });
-  console.log(wizardData);
 
-  const [formIsValid, setFormIsValid] = useState(true);
+  const [formIsValid, setFormIsValid] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+
+  useEffect(() => {
+    ctx.dispatch({
+      type: "ADD_FORM_VALIDITY",
+      payload: {
+        formIsValid: formIsValid,
+      },
+    });
+  }, [formIsValid, ctx]);
+
+  const [candidateDataPostResponse, setCandidateDataPostResponse] = useState({
+    request: { statusText: "" },
+  });
 
   const agriculturalSkillsInputHandler = (e) => {
     setState((prev) => ({ ...prev, agriculturalSkills: e.target.value }));
@@ -91,30 +134,43 @@ const WizzardPage3 = (props) => {
     setState((prev) => ({ ...prev, metalworkSkills: e.target.value }));
 
     if (e.target.value === "No") {
-      setState((prev) => ({ ...prev, Marking: false }));
-      setState((prev) => ({ ...prev, markingValue: "" }));
-      setState((prev) => ({ ...prev, Cutting: false }));
-      setState((prev) => ({ ...prev, cuttingValue: "" }));
-      setState((prev) => ({ ...prev, Joining: false }));
-      setState((prev) => ({ ...prev, joiningValue: "" }));
-      setState((prev) => ({ ...prev, Drilling: false }));
-      setState((prev) => ({ ...prev, drillingValue: "" }));
-      setState((prev) => ({ ...prev, Filling: false }));
-      setState((prev) => ({ ...prev, fillinValue: "" }));
-      setState((prev) => ({ ...prev, CuttingThreads: false }));
-      setState((prev) => ({ ...prev, cuttingThreadsValue: "" }));
+      setState((prev) => ({ ...prev, ...metalworkSkillsInitialState }));
     }
   };
 
   const onMetalworkHandler = (e) => {
     const { name, value, checked } = e.target;
 
+    if (checked) {
+      setState((prev) => {
+        return {
+          ...prev,
+          metalworkSkillsDetails: [...prev.metalworkSkillsDetails, value],
+        };
+      });
+    }
+
+    if (!checked) {
+      let newArr = [];
+
+      newArr = state.metalworkSkillsDetails.filter((e, i, arr) => {
+        return e !== value;
+      });
+
+      setState((prev) => {
+        return {
+          ...prev,
+          metalworkSkillsDetails: newArr,
+        };
+      });
+    }
+
     setState((prev) => {
       const newObj = { ...prev };
       newObj[value] = !newObj[value];
       return newObj;
     });
-    if (checked === true) {
+    if (checked) {
       setState((prev) => {
         const newObj = { ...prev };
         newObj[name] = value;
@@ -142,7 +198,7 @@ const WizzardPage3 = (props) => {
       setState((prev) => ({ ...prev, convicted: "No" }));
       setState((prev) => ({
         ...prev,
-        reasons: [{ whatName: "", whenName: "" }],
+        convictions: [{ forWhat: "", convictionDate: "" }],
       }));
     }
   };
@@ -160,28 +216,35 @@ const WizzardPage3 = (props) => {
 
   const reasonsListAddField = (actionType) => (event) => {
     event.preventDefault();
-    let errorMessage = state.reasons.map((user, key) => {
+    let errorMessage = state.convictions.map((user, key) => {
       let error = {};
       let valid = true;
 
-      if (!user.whatName) {
+      if (!user.forWhat) {
         error.errorwhatName = "What required";
         valid = false;
       } else {
         error.errorwhatName = "";
       }
-      if (!user.whenName) {
+      if (!user.convictionDate) {
         error.errorwhenName = "When required";
         valid = false;
       } else {
         error.errorwhenName = "";
       }
 
-      if (state.reasons.length - 1 === key && valid && actionType === "add") {
+      if (
+        state.convictions.length - 1 === key &&
+        valid &&
+        actionType === "add"
+      ) {
         setState((prev) => {
           return {
             ...prev,
-            reasons: [...prev.reasons, { whatName: "", whenName: "" }],
+            convictions: [
+              ...prev.convictions,
+              { forWhat: "", convictionDate: "" },
+            ],
           };
         });
       }
@@ -196,13 +259,13 @@ const WizzardPage3 = (props) => {
   const reasonsListHandleChange = (e) => {
     let value = e.target.value;
 
-    if (["whatName", "whenName"].includes(e.target.name)) {
-      let reasonDetail = [...state.reasons];
+    if (["forWhat", "convictionDate"].includes(e.target.name)) {
+      let reasonDetail = [...state.convictions];
       reasonDetail[e.target.dataset.id][e.target.name] = e.target.value;
       setState((prev) => {
         return {
           ...prev,
-          reasons: reasonDetail,
+          convictions: reasonDetail,
         };
       });
     } else {
@@ -214,11 +277,11 @@ const WizzardPage3 = (props) => {
 
   const reasonsListRemoveField = (id) => (e) => {
     e.preventDefault();
-    var reasons = state.reasons.filter((user, key) => key !== id);
+    var convictions = state.convictions.filter((user, key) => key !== id);
     setState((prev) => {
       return {
         ...prev,
-        reasons,
+        convictions,
       };
     });
   };
@@ -268,7 +331,6 @@ const WizzardPage3 = (props) => {
   );
 
   useEffect(() => {
-    setFormIsValid(true);
     if (
       state.agriculturalSkills === "Yes" &&
       state.agriculturalSkillsDetails === ""
@@ -289,9 +351,21 @@ const WizzardPage3 = (props) => {
 
     if (
       state.convicted === "Yes" &&
-      state.reasons.some((e, i, arr) => e.whatName === "" || e.whenName === "")
+      state.convictions.some(
+        (e, i, arr) => e.forWhat === "" || e.convictionDate === ""
+      )
     ) {
       setFormIsValid(false);
+    }
+    if (
+      state.agriculturalSkills &&
+      state.metalworkSkills &&
+      state.convicted &&
+      state.airplaneSkills &&
+      state.carSkills &&
+      state.bicycleSkills
+    ) {
+      setFormIsValid(true);
     }
   }, [
     state.agriculturalSkills,
@@ -304,12 +378,24 @@ const WizzardPage3 = (props) => {
     state.Joining,
     state.Filling,
     state.convicted,
-    state.reasons,
+    state.convictions,
+    state.bicycleSkills,
+    state.carSkills,
+    state.airplaneSkills,
   ]);
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
+  const {
+    error,
+    isLoading,
+    fetchData: postCandidateData,
+  } = useAxios("http://det.api.rs.ey.com/api/applicants");
 
+  const handleWizardExit = () => {
+    setInWizzard(false);
+    navigate("/");
+  };
+
+  const onSubmitHandler = () => {
     ctx.dispatch({
       type: "ADD_FORM3_DATA",
       payload: {
@@ -330,18 +416,55 @@ const WizzardPage3 = (props) => {
         Joining: state.Joining,
         joiningValue: state.joiningValue,
         convicted: state.convicted,
-        reasons: state.reasons,
+        convictions: state.convictions,
         airplaneSkills: state.airplaneSkills,
         carSkills: state.carSkills,
         bicycleSkills: state.bicycleSkills,
       },
     });
-    onForm3Submit(state);
-    setInWizzard(false);
-    navigate("/");
+
+    const mojObjekat = {
+      title: wizardData.title,
+      firstName: wizardData.firstName,
+      lastName: wizardData.lastName,
+      dateOfBirth: wizardData.dateOfBirth,
+      email: wizardData.email,
+      residencyDuration: wizardData.howManyYearsLived * 1,
+      doesHaveAgricultureSkills: state.agriculturalSkills === "Yes",
+      agricultureSkills:
+        state.agriculturalSkills === "Yes"
+          ? state.agriculturalSkillsDetails
+          : "false",
+      doesHaveMetalworkSkills: state.metalworkSkills === "Yes",
+      metalworkSkills:
+        state.metalworkSkills === "Yes"
+          ? state.metalworkSkillsDetails.join()
+          : "false",
+      isConvicted: state.convicted === "Yes",
+      doesFlyAirplane: state.airplaneSkills === "Yes",
+      doesDriveCar: state.carSkills === "Yes",
+      doesDriveBicycle: state.bicycleSkills === "Yes",
+      address: {
+        addressLine1: wizardData.address1,
+        addressLine2: wizardData.address2,
+        state: wizardData.country,
+        city: wizardData.city,
+        postalCode: wizardData.postalCode,
+      },
+      convictions: state.convicted === "Yes" ? state.convictions : [],
+    };
+    postCandidateData(setCandidateDataPostResponse, true, mojObjekat);
+    setIsModal(true);
   };
 
   const onBackHandler = () => {
+    ctx.dispatch({
+      type: "ADD_FORM_VALIDITY",
+      payload: {
+        formIsValid: false,
+      },
+    });
+
     setStep((prev) => prev - 1);
   };
 
@@ -350,9 +473,9 @@ const WizzardPage3 = (props) => {
       <form id="form3" className={classes.form}>
         <div className={classes.input_field}>
           <InputRadio
-            label="Do you have any agricultural skills?"
-            value1="Yes"
-            value2="No"
+            label={WIZARD_PAGE_3_AGRICULTURAL_SKILLS_LABEL}
+            value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+            value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
             isRadioSelected={isRadioSelectedAgricultural}
             handleRadioClick={handleRadioClickAgricultural}
             name="agricultural"
@@ -367,15 +490,15 @@ const WizzardPage3 = (props) => {
                 value={state.agriculturalSkillsDetails}
               ></textarea>
               {agriculturalSkillsDetailsInvalid && (
-                <p>Please enter more details</p>
+                <p>{WIZARD_PAGE_3_TEXT_AREA_ERROR_MESSAGE}</p>
               )}
             </div>
           )}
 
           <InputRadio
-            label="Do you have any metalwork skills?"
-            value1="Yes"
-            value2="No"
+            label={WIZARD_PAGE_3_METALWORK_SKILLS_LABEL}
+            value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+            value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
             isRadioSelected={isRadioSelectedMetalwork}
             handleRadioClick={handleRadioClickMetalwork}
             name="metalwork"
@@ -390,52 +513,52 @@ const WizzardPage3 = (props) => {
               </label>
               <div className={classes.checkbox_container}>
                 <InputCheckbox
-                  value="Marking"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_MARKING}
                   id="marking"
                   name="markingValue"
                   onChange={onMetalworkHandler}
                   checked={state.Marking}
-                  label="Marking"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_MARKING}
                 />
                 <InputCheckbox
-                  value="Cutting"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING}
                   id="cutting"
                   name="cuttingValue"
                   onChange={onMetalworkHandler}
                   checked={state.Cutting}
-                  label="Cutting"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING}
                 />
                 <InputCheckbox
-                  value="Drilling"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_DRILLING}
                   id="drilling"
                   name="drillingValue"
                   onChange={onMetalworkHandler}
                   checked={state.Drilling}
-                  label="Drilling"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_DRILLING}
                 />
                 <InputCheckbox
-                  value="CuttingThreads"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING_THREADS}
                   id="cuttingThreads"
                   name="cuttingThreadsValue"
                   onChange={onMetalworkHandler}
                   checked={state.CuttingThreads}
-                  label="Cutting internal and external threads"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_CUTTING_THREADS_LABEL}
                 />
                 <InputCheckbox
-                  value="Filling"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_FILLING}
                   id="filling"
                   name="fillingValue"
                   onChange={onMetalworkHandler}
                   checked={state.Filling}
-                  label="Filling"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_FILLING}
                 />
                 <InputCheckbox
-                  value="Joining"
+                  value={WIZARD_PAGE_3_INPUT_CHECKBOX_JOINING}
                   id="joining"
                   name="joiningValue"
                   onChange={onMetalworkHandler}
                   checked={state.Joining}
-                  label="Joining"
+                  label={WIZARD_PAGE_3_INPUT_CHECKBOX_JOINING}
                 />
               </div>
             </div>
@@ -443,9 +566,9 @@ const WizzardPage3 = (props) => {
 
           <div className={classes.convicted_container}>
             <InputRadio
-              label="Have you ever been convicted?"
-              value1="Yes"
-              value2="No"
+              label={WIZARD_PAGE_3_CONVICTED_LABEL}
+              value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+              value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
               isRadioSelected={isRadioSelectedConvicted}
               handleRadioClick={handleRadioClickConvicted}
               name="conviction"
@@ -455,7 +578,7 @@ const WizzardPage3 = (props) => {
             {affirmativeAnswerConvicted && (
               <div className={classes.convicted_bottom}>
                 <ConvictedDetails
-                  reasons={state.reasons}
+                  convictions={state.convictions}
                   errorMessageReasons={state.errorMessageReasons}
                   reasonsListHandleChange={reasonsListHandleChange}
                   reasonsListRemoveField={reasonsListRemoveField}
@@ -465,9 +588,9 @@ const WizzardPage3 = (props) => {
             )}
           </div>
           <InputRadio
-            label="Do you know how to fly an airplane?"
-            value1="Yes"
-            value2="No"
+            label={WIZARD_PAGE_3_AIRPLANE_LABEL}
+            value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+            value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
             isRadioSelected={isRadioSelectedAirplane}
             handleRadioClick={handleRadioClickAirplane}
             name="Airplane"
@@ -475,9 +598,9 @@ const WizzardPage3 = (props) => {
             id2="no-airplane"
           />
           <InputRadio
-            label="Do you know how to drive a car?"
-            value1="Yes"
-            value2="No"
+            label={WIZARD_PAGE_3_CAR_LABEL}
+            value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+            value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
             isRadioSelected={isRadioSelectedCar}
             handleRadioClick={handleRadioClickCar}
             name="Car"
@@ -485,9 +608,9 @@ const WizzardPage3 = (props) => {
             id2="no-car"
           />
           <InputRadio
-            label="Do you know how to fly an bicycle?"
-            value1="Yes"
-            value2="No"
+            label={WIZARD_PAGE_3_BICYCLE_LABEL}
+            value1={WIZARD_PAGE_3_INPUT_RADIO_VALUE_1}
+            value2={WIZARD_PAGE_3_INPUT_RADIO_VALUE_2}
             isRadioSelected={isRadioSelectedBicycle}
             handleRadioClick={handleRadioClickBicycle}
             name="Bicycle"
@@ -500,10 +623,26 @@ const WizzardPage3 = (props) => {
         onClickBackHandler={onBackHandler}
         onClickSubmitHandler={onSubmitHandler}
         disabled={!formIsValid}
-        buttonText="SUBMIT"
+        buttonText={WIZARD_BUTTON_SUBMIT}
       />
+      {isModal && (
+        <SubmitModal
+          isLoading={isLoading}
+          error={error}
+          setIsModal={setIsModal}
+          handleWizardExit={handleWizardExit}
+          candidateDataPostResponse={candidateDataPostResponse}
+        />
+      )}
     </WizzardFormLayout>
   );
+};
+
+WizzardPage3.propTypes = {
+  props: PropTypes.shape({
+    setInWizzard: PropTypes.func,
+    setStep: PropTypes.func,
+  }),
 };
 
 export default WizzardPage3;

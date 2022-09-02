@@ -22,6 +22,8 @@ const LandingPage = () => {
   const ctx = useContext(Contex);
   const { dispatch } = ctx;
 
+  console.log(ctx.state);
+
   const [data, setData] = useState([]);
   const count = 5;
   const {
@@ -32,7 +34,6 @@ const LandingPage = () => {
     `https://api.nasa.gov/planetary/apod?count=${count}&api_key=${process.env.REACT_APP_API_KEY}`
   );
   useEffect(() => {
-    console.log(ctx.state.applicationInfo);
     getImageOfTheDay(setData);
   }, [getImageOfTheDay]);
 

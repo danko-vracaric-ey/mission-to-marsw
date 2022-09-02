@@ -1,5 +1,13 @@
 import React from "react";
 import classes from "./Input.module.scss";
+import PropTypes from "prop-types";
+
+/**
+ * Reusable input component
+ * @param {object} props Input prop configuration data
+ * @returns {JSX} Input field with conditional text label
+ */
+
 const Input = React.forwardRef((props, ref) => {
   const {
     className,
@@ -43,10 +51,31 @@ const Input = React.forwardRef((props, ref) => {
           max={max}
           data-id={dataid}
         />
+        {isInvalid && !disabled && <p>{errorMessage}</p>}
       </div>
-      {isInvalid && <p>{errorMessage}</p>}
     </div>
   );
 });
+
+Input.propTypes = {
+  props: PropTypes.shape({
+    className: PropTypes.string,
+    label: PropTypes.string,
+    id: PropTypes.string,
+    name: PropTypes.string,
+    type: PropTypes.string,
+    notMandatory: PropTypes.bool,
+    value: PropTypes.string,
+    onBlur: PropTypes.func,
+    onChange: PropTypes.func,
+    disabled: PropTypes.bool,
+    errorMessage: PropTypes.string,
+    isInvalid: PropTypes.bool,
+    min: PropTypes.string,
+    max: PropTypes.string,
+    dataid: PropTypes.string,
+    placeholder: PropTypes.string,
+  }),
+};
 
 export default Input;

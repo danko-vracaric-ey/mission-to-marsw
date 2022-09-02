@@ -10,7 +10,7 @@
 }
 
 .agreement_wrapper {
-  height: 70%;
+  height: 72%;
   background-color: white;
   padding: 50px;
   padding-top: 30px;
@@ -33,6 +33,11 @@
   font-weight: 500;
   font-size: 0.8rem;
   line-height: 170%;
+  a {
+    color: blue;
+    font-weight: 800;
+  }
+
   @media (max-width: 480px) {
     line-height: 130%;
   }

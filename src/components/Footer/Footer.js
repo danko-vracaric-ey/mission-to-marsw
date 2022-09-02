@@ -23,6 +23,9 @@ const Footer = () => {
     if (location.pathname === "/application/signup") {
       setShouldShow(false);
     }
+    if (location.pathname === "/application/intro") {
+      setShouldShow(false);
+    }
   }, [location.pathname, shouldShow]);
 
   let landingFooterLinks = (

@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import classes from "./WizzardPage1.module.scss";
@@ -8,12 +9,33 @@ import Select from "../../components/Wizzard/Select/Select";
 import useInput from "../../hooks/useInput";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 import { Contex } from "../../store/Store";
+import {
+  WIZARD_PAGE_1_SELECT_TITLE,
+  WIZARD_PAGE_1_SELECT_TITLE_1,
+  WIZARD_PAGE_1_SELECT_TITLE_2,
+  WIZARD_PAGE_1_SELECT_TITLE_3,
+  WIZARD_PAGE_1_SELECT_TITLE_4,
+  WIZARD_PAGE_1_SELECT_TITLE_5,
+  WIZARD_PAGE_1_SELECT_LABEL,
+  WIZARD_PAGE_1_ERROR_MESSAGE,
+  WIZARD_PAGE_1_NAME_ERROR_MESSAGE,
+  WIZARD_PAGE_1_LASTNAME_ERROR_MESSAGE,
+  WIZARD_PAGE_1_DATE_LABEL,
+  WIZARD_PAGE_1_DATE_ERROR_MESSAGE,
+} from "../../static";
+
+/**
+ * First wizard page that users lands on after confirming terms and conditions
+ *
+ * @param {object} props A function handling wizard rendering path
+ * @returns {JSX} Wizard page one form
+ */
 
 const WizzardPage1 = (props) => {
   const { onForm1Submit } = props;
   const navigate = useNavigate();
   const ctx = useContext(Contex);
-  const wizardData = ctx.state.applicationInfo;
+  const wizardData = ctx.state;
 
   const [state, setState] = useState({
     title: wizardData.title,
@@ -125,16 +147,23 @@ const WizzardPage1 = (props) => {
         <div className={classes.top}>
           <Select
             value2={state.title}
-            value={["Title", "Mr", "Miss", "Dr"]}
+            value={[
+              WIZARD_PAGE_1_SELECT_TITLE,
+              WIZARD_PAGE_1_SELECT_TITLE_1,
+              WIZARD_PAGE_1_SELECT_TITLE_2,
+              WIZARD_PAGE_1_SELECT_TITLE_3,
+              WIZARD_PAGE_1_SELECT_TITLE_4,
+              WIZARD_PAGE_1_SELECT_TITLE_5,
+            ]}
             name="Title"
             id="title"
-            label="Please provide your title and name"
+            label={WIZARD_PAGE_1_SELECT_LABEL}
             notMandatory={false}
             className={classes.select_input_wrapper}
             onChange={onSelectChangeFunc}
             onBlur={onSelectBlurFunc}
             isInvalid={selectInvalid}
-            errorMessage="Please select your title!"
+            errorMessage={WIZARD_PAGE_1_ERROR_MESSAGE}
           />
 
           <div className={classes.first_last_wrapper}>
@@ -147,7 +176,7 @@ const WizzardPage1 = (props) => {
               className={classes.input_name_wrapper}
               value={state.firstName}
               isInvalid={nameInvalid}
-              errorMessage="Please enter a valid name!"
+              errorMessage={WIZARD_PAGE_1_NAME_ERROR_MESSAGE}
             />
 
             <Input
@@ -159,7 +188,7 @@ const WizzardPage1 = (props) => {
               onBlur={onLastNameBlurFunc}
               value={state.lastName}
               isInvalid={lastNameInvalid}
-              errorMessage="Please enter a valid last name!"
+              errorMessage={WIZARD_PAGE_1_LASTNAME_ERROR_MESSAGE}
             />
           </div>
         </div>
@@ -168,15 +197,15 @@ const WizzardPage1 = (props) => {
             <Input
               type="date"
               name="date"
-              label="What is your date of birth?"
+              label={WIZARD_PAGE_1_DATE_LABEL}
               id="date"
               onChange={onDateChangeFunc}
               onBlur={onDateBlurFunc}
               value={state.dateOfBirth}
               isInvalid={dateInvalid}
-              errorMessage="Please enter a valid date!"
+              errorMessage={WIZARD_PAGE_1_DATE_ERROR_MESSAGE}
               min="1960-12-31"
-              max="2000-12-31"
+              max="2002-12-31"
             />
           </div>
         </div>
@@ -189,6 +218,12 @@ const WizzardPage1 = (props) => {
       />
     </WizzardFormLayout>
   );
+};
+
+WizzardPage1.propTypes = {
+  props: PropTypes.shape({
+    onForm1Submit: PropTypes.func,
+  }),
 };
 
 export default WizzardPage1;

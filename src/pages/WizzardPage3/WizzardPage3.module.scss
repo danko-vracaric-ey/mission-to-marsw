@@ -39,3 +39,12 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.isLoading {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(177, 165, 165, 0.504);
+}

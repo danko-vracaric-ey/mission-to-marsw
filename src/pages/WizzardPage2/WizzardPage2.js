@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types";
 
 import classes from "./WizzardPage2.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
@@ -7,11 +8,34 @@ import useInput from "../../hooks/useInput";
 import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import WizzardButtons from "../../components/Wizzard/WizzardButtons/WizzardButtons";
 import { Contex } from "../../store/Store";
+import useAxios from "../../hooks/useAxios";
+import {
+  WIZARD_PAGE_2_EMAIL_LABEL,
+  WIZARD_PAGE_2_EMAIL_ERROR_MESSAGE,
+  WIZARD_PAGE_2_ADDRESS_1_ERROR_MESSAGE,
+  WIZARD_PAGE_2_ADDRESS_1_LABEL,
+  WIZARD_PAGE_2_ADDRESS_2_LABEL,
+  WIZARD_PAGE_2_COUNTRY_LABEL,
+  WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE,
+  WIZARD_PAGE_2_CITY_LABEL,
+  WIZARD_PAGE_2_CITY_ERROR_MESSAGE,
+  WIZARD_PAGE_2_POSTAL_CODE_LABEL,
+  WIZARD_PAGE_2_POSTAL_CODE_ERROR_MESSAGE,
+  WIZARD_PAGE_2_HOW_LONG_LIVED_LABEL,
+  WIZARD_PAGE_2_HOW_LONG_LIVED_ERROR_MESSAGE,
+} from "../../static";
+
+/**
+ * Second page that users lands on after successfully submitting data in first page
+ *
+ * @param {object} props A function handling wizard rendering path
+ * @returns {JSX} Wizard page two form
+ */
 
 const WizzardPage2 = (props) => {
   const { onForm2Submit, setStep } = props;
   const ctx = useContext(Contex);
-  const wizardData = ctx.state.applicationInfo;
+  const wizardData = ctx.state;
 
   const [state, setState] = useState({
     email: wizardData.email,
@@ -23,7 +47,90 @@ const WizzardPage2 = (props) => {
     howManyYearsLived: wizardData.howManyYearsLived,
   });
 
-  console.log(state.country);
+  const [countries, setCountries] = useState(wizardData.countries);
+  const [selectedCountries, setSelectedCountries] = useState(
+    wizardData.selectedCountries
+  );
+  const [selectedStateTLA, setSelectedStateTLA] = useState(
+    wizardData.selectedStateTLA
+  );
+
+  const [selectedCities, setSelectedCities] = useState(
+    wizardData.selectedCities
+  );
+
+  const [postalCodes, setPostalCodes] = useState(wizardData.postalCodes);
+  const [selectedPostalCodes, setSelectedPostalCodes] = useState(
+    wizardData.selectedPostalCodes
+  );
+  const [selectedPostalCodeNumber, setSelectedPostalCodeNumber] = useState(
+    wizardData.selectedPostalCodeNumber
+  );
+
+  const { fetchData: getStates } = useAxios(
+    "http://det.api.rs.ey.com/api/states"
+  );
+
+  useEffect(() => {
+    getStates(setCountries);
+  }, [getStates]);
+
+  const { fetchData: getCities } = useAxios(
+    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/${state.city}`
+  );
+
+  const { fetchData: getPostalCodes } = useAxios(
+    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/${state.city}/postalcodes`
+  );
+
+  useEffect(() => {
+    if (state.city) {
+      getPostalCodes(setPostalCodes);
+    }
+  }, [state.city, getPostalCodes]);
+
+  useEffect(() => {
+    if (selectedStateTLA) {
+      const mapCities = (data) => {
+        let Cities = ["City"];
+        let newCities = [];
+        let a;
+        newCities = data
+          .map((e, i, arr) => {
+            if (e.name !== a) {
+              a = e.name;
+              return a;
+            } else {
+              return "";
+            }
+          })
+          .filter((e) => e !== "");
+
+        const finalArr = Cities.concat(newCities);
+
+        setSelectedCities(finalArr);
+      };
+
+      getCities(mapCities);
+    }
+  }, [selectedStateTLA, getCities]);
+
+  const manageCountriesHandler = (el, index) => {
+    setState((prev) => ({
+      ...prev,
+      country: el.tla,
+    }));
+
+    setSelectedStateTLA(el.tla);
+  };
+
+  const managePostalCodesHandler = (el) => {
+    setState((prev) => ({
+      ...prev,
+      postalCode: el.code,
+    }));
+    setSelectedPostalCodeNumber(el.code);
+  };
 
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -37,7 +144,7 @@ const WizzardPage2 = (props) => {
     isInvalid: emailInvalid,
   } = useInput(
     (val) => {
-      return val.trim() !== "" && val.includes("@");
+      return val.trim() !== "" && val.includes("@") && val.includes(".");
     },
     emailInputHandler,
     state.email
@@ -53,11 +160,40 @@ const WizzardPage2 = (props) => {
     isInvalid: address1Invalid,
   } = useInput(
     (val) => {
-      return val.length !== 0;
+      return val.length;
     },
     address1InputHandler,
     state.address1
   );
+
+  const selectHandler = (event) => {
+    setState((prev) => {
+      return {
+        ...prev,
+        city: "",
+      };
+    });
+    setState((prev) => {
+      return {
+        ...prev,
+        postalCode: "",
+      };
+    });
+    setSelectedStateTLA("");
+    setSelectedPostalCodeNumber("");
+    setSelectedPostalCodes([]);
+    setState((prev) => ({
+      ...prev,
+      country: event.target.value,
+    }));
+    let cntrs;
+    cntrs = countries.filter((e, i, arr) =>
+      e.name.includes(event.target.value)
+    );
+    if (cntrs) {
+      setSelectedCountries(cntrs);
+    }
+  };
 
   const address2InputHandler = (e) => {
     setState((prev) => ({ ...prev, address2: e.target.value }));
@@ -69,18 +205,11 @@ const WizzardPage2 = (props) => {
     isInvalid: address2Invalid,
   } = useInput(
     (val) => {
-      return val.length !== 0;
+      return !val.length;
     },
     address2InputHandler,
     state.address2
   );
-
-  const selectHandler = (e) => {
-    setState((prev) => ({
-      ...prev,
-      country: e.target.value,
-    }));
-  };
 
   const {
     onChangeFunc: selectChangeFunc,
@@ -105,14 +234,32 @@ const WizzardPage2 = (props) => {
     isInvalid: cityInvalid,
   } = useInput(
     (val) => {
-      return val.length !== 0;
+      return val.length;
     },
     cityInputHandler,
     state.city
   );
 
-  const postalCodeInputHandler = (e) => {
-    setState((prev) => ({ ...prev, postalCode: e.target.value }));
+  const postalCodeInputHandler = (event) => {
+    setState((prev) => {
+      return {
+        ...prev,
+        postalCode: "",
+      };
+    });
+    setSelectedPostalCodeNumber("");
+
+    setState((prev) => ({
+      ...prev,
+      postalCode: event.target.value,
+    }));
+    let pstlCodes;
+    pstlCodes = postalCodes.filter((e, i, arr) =>
+      e.code.includes(event.target.value)
+    );
+    if (pstlCodes) {
+      setSelectedPostalCodes(pstlCodes);
+    }
   };
   const {
     onChangeFunc: postalCodeChangeFunc,
@@ -121,7 +268,7 @@ const WizzardPage2 = (props) => {
     isInvalid: postalCodeInvalid,
   } = useInput(
     (val) => {
-      return val.length !== 0 && val !== "Zip";
+      return val.length && val !== "Zip";
     },
     postalCodeInputHandler,
     state.postalCode
@@ -137,7 +284,7 @@ const WizzardPage2 = (props) => {
     isInvalid: howLongLivedInvalid,
   } = useInput(
     (val) => {
-      return val.length !== 0;
+      return val.length;
     },
     howLongLivedInputHandler,
     state.howManyYearsLived
@@ -147,7 +294,6 @@ const WizzardPage2 = (props) => {
     if (
       emailIsValid &&
       address1IsValid &&
-      address2IsValid &&
       selectIsValid &&
       cityIsValid &&
       postalCodeIsValid &&
@@ -183,6 +329,12 @@ const WizzardPage2 = (props) => {
         city: state.city,
         postalCode: state.postalCode,
         howManyYearsLived: state.howManyYearsLived,
+        countries: countries,
+        selectedCountries: selectedCountries,
+        selectedStateTLA: selectedStateTLA,
+        selectedCities: selectedCities,
+        selectedPostalCodes: selectedPostalCodes,
+        selectedPostalCodeNumber: selectedPostalCodeNumber,
       },
     });
     onForm2Submit(state);
@@ -196,19 +348,20 @@ const WizzardPage2 = (props) => {
     <WizzardFormLayout>
       <form id="form2" className={classes.form} autoComplete="off">
         <div className={classes.input_field}>
-          <Input
-            type="text"
-            name="Email"
-            id="email"
-            value={state.email}
-            label="What is your email address?"
-            onChange={emailChangeFunc}
-            onBlur={emailBlurFunc}
-            className={classes.email}
-            isInvalid={emailInvalid}
-            errorMessage="Please enter a valid email!"
-          />
-
+          <div className={classes.email_wrapper}>
+            <Input
+              type="text"
+              name="Email"
+              id="email"
+              value={state.email}
+              label={WIZARD_PAGE_2_EMAIL_LABEL}
+              onChange={emailChangeFunc}
+              onBlur={emailBlurFunc}
+              className={classes.email}
+              isInvalid={emailInvalid}
+              errorMessage={WIZARD_PAGE_2_EMAIL_ERROR_MESSAGE}
+            />
+          </div>
           <div className={classes.address_wrapper}>
             <div className={classes.address}>
               <Input
@@ -216,11 +369,11 @@ const WizzardPage2 = (props) => {
                 name="Address1"
                 id="address1"
                 value={state.address1}
-                label="Address line 1"
+                label={WIZARD_PAGE_2_ADDRESS_1_LABEL}
                 onChange={address1ChangeFunc}
                 onBlur={address1BlurFunc}
                 isInvalid={address1Invalid}
-                errorMessage="Please enter a valid address"
+                errorMessage={WIZARD_PAGE_2_ADDRESS_1_ERROR_MESSAGE}
               />
             </div>
             <div className={classes.address}>
@@ -229,68 +382,102 @@ const WizzardPage2 = (props) => {
                 name="Address"
                 id="address2"
                 value={state.address2}
-                label="Address line 2"
+                label={WIZARD_PAGE_2_ADDRESS_2_LABEL}
                 notMandatory={true}
                 onChange={address2ChangeFunc}
                 onBlur={address2BlurFunc}
                 isInvalid={address2Invalid}
-                errorMessage="Please enter a valid adress"
               />
             </div>
           </div>
           <div className={classes.bottom}>
             <div className={classes.state_city}>
-              <Select
-                value={["Country", "Serbia", "Germany", "France"]}
-                id="state"
-                name="State"
-                value2={state.country}
-                notMandatory={false}
-                label="State"
-                onChange={selectChangeFunc}
-                onBlur={selectBlurFunc}
-                className={classes.select_city}
-                isInvalid={selectInvalid}
-                errorMessage="Please, select a state!"
-              />
-              <Input
-                type="text"
-                name="City"
-                id="city"
-                value={state.city}
-                label="City/Town"
-                className={classes.city}
-                disabled={state.country === "" ? true : false}
-                onChange={cityChangeFunc}
-                onBlur={cityBlurFunc}
-                isInvalid={cityInvalid}
-                errorMessage="Please enter a city"
-              />
-              <Input
-                type="text"
-                name="Zip"
-                id="postal"
-                value={state.postalCode}
-                label="Postal code"
-                className={classes.postal}
-                disabled={state.city !== "" ? false : true}
-                onChange={postalCodeChangeFunc}
-                onBlur={postalCodeBlurFunc}
-                isInvalid={postalCodeInvalid}
-                errorMessage="Please enter a valid postal code"
-              />
+              <div className={classes.countries_wrapper}>
+                <Input
+                  type="text"
+                  name="Country"
+                  id="country"
+                  value={state.country}
+                  label={WIZARD_PAGE_2_COUNTRY_LABEL}
+                  className={classes.country}
+                  onChange={selectChangeFunc}
+                  onBlur={selectBlurFunc}
+                  isInvalid={selectInvalid}
+                  errorMessage={WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE}
+                />
+                {!selectedStateTLA && state.country !== "" && (
+                  <div className={classes.search_countries}>
+                    {selectedCountries.map((el, i, arr) => {
+                      return (
+                        <p
+                          key={Math.random() + `${i}`}
+                          onClick={() => manageCountriesHandler(el, i)}
+                        >
+                          {el.name}
+                        </p>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className={classes.cities_wrapper}>
+                <Select
+                  value2={state.city}
+                  value={selectedCities}
+                  name="City"
+                  id="city"
+                  label={WIZARD_PAGE_2_CITY_LABEL}
+                  notMandatory={false}
+                  onChange={cityChangeFunc}
+                  onBlur={cityBlurFunc}
+                  isInvalid={cityInvalid}
+                  errorMessage={WIZARD_PAGE_2_CITY_ERROR_MESSAGE}
+                  disabled={!state.country}
+                />
+              </div>
+              <div className={classes.postalCodes_wrapper}>
+                <Input
+                  type="text"
+                  name="Zip"
+                  id="postal"
+                  value={state.postalCode}
+                  label={WIZARD_PAGE_2_POSTAL_CODE_LABEL}
+                  className={classes.postal}
+                  disabled={
+                    state.city !== "" && state.city !== "City" ? false : true
+                  }
+                  onChange={postalCodeChangeFunc}
+                  onBlur={postalCodeBlurFunc}
+                  isInvalid={postalCodeInvalid}
+                  errorMessage={WIZARD_PAGE_2_POSTAL_CODE_ERROR_MESSAGE}
+                />
+                {!selectedPostalCodeNumber && state.postalCode !== "" && (
+                  <div className={classes.search_postalCodes}>
+                    {selectedPostalCodes.map((el, i, arr) => {
+                      return (
+                        <p
+                          key={Math.random() + `${i}`}
+                          onClick={() => managePostalCodesHandler(el, i)}
+                        >
+                          {el.code}
+                        </p>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
             <Input
-              type="text"
+              type="number"
               name="Time"
               id="time"
               value={state.howManyYearsLived}
-              label="How many years have you lived here?"
+              label={WIZARD_PAGE_2_HOW_LONG_LIVED_LABEL}
               className={classes.time}
               onChange={howLongLivedChangeFunc}
               onBlur={howLongLivedBlurFunc}
               isInvalid={howLongLivedInvalid}
-              errorMessage="Please enter how long you lived here"
+              errorMessage={WIZARD_PAGE_2_HOW_LONG_LIVED_ERROR_MESSAGE}
             />
           </div>
         </div>
@@ -302,6 +489,13 @@ const WizzardPage2 = (props) => {
       />
     </WizzardFormLayout>
   );
+};
+
+WizzardPage2.propTypes = {
+  props: PropTypes.shape({
+    onForm2Submit: PropTypes.func,
+    setStep: PropTypes.func,
+  }),
 };
 
 export default WizzardPage2;

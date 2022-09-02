@@ -10,19 +10,34 @@ const useAxios = (url) => {
   const [error, setIsError] = useState(null);
 
   const fetchData = useCallback(
-    async (setData) => {
+    async (setData, post, body) => {
       setIsLoading(true);
-      try {
-        const { status, data } = await axios.get(url);
-        if (status !== 200) {
-          throw new Error("An error occured");
-        }
+      if (!post) {
+        try {
+          const { status, data } = await axios.get(url);
+          if (status !== 200) {
+            throw new Error("An error occured");
+          }
 
-        setData(data);
-      } catch (error) {
-        setIsError(error.message || "Something went wrong!");
-        setIsLoading(false);
+          setData(data);
+        } catch (error) {
+          console.log(error, " JA SAM ERROR ");
+          setIsError(error.message || "Something went wrong!");
+          setIsLoading(false);
+        }
       }
+
+      if (post) {
+        try {
+          const x = await axios.post(url, body);
+          setData(x);
+        } catch (error) {
+          console.log(error, " JA SAM ERROR ");
+          setIsError(error.message || "Something went wrong!");
+          setIsLoading(false);
+        }
+      }
+
       setIsLoading(false);
     },
     [url]

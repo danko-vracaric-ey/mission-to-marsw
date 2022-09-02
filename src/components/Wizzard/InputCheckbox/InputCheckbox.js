@@ -1,17 +1,15 @@
 import classes from "./InputCheckbox.module.scss";
+import PropTypes from "prop-types";
+
+/**
+ * Reusable Input type checkbox component
+ * @param {object} props Checkbox input prop configuration data
+ * @returns {JSX} Checkmark field
+ */
 
 const InputCheckbox = (props) => {
-  const {
-    type,
-    id,
-    name,
-    value,
-    onChange,
-    checked,
-    label,
-    className,
-    isClass,
-  } = props;
+  const { id, name, value, onChange, checked, label, className, isClass } =
+    props;
 
   return (
     <div className={isClass ? className : classes.wrapper}>
@@ -26,6 +24,19 @@ const InputCheckbox = (props) => {
       <label htmlFor={id}>{label}</label>
     </div>
   );
+};
+
+InputCheckbox.propTypes = {
+  props: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    checked: PropTypes.bool,
+    label: PropTypes.string,
+    className: PropTypes.string,
+    isClass: PropTypes.bool,
+  }),
 };
 
 export default InputCheckbox;

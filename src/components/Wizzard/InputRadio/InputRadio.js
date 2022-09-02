@@ -1,4 +1,11 @@
 import classes from "./InputRadio.module.scss";
+import PropTypes from "prop-types";
+
+/**
+ * Reusable Input type radio component
+ * @param {object} props Radio input prop configuration data
+ * @returns {JSX} Radio input fields for marking answers on label questions
+ */
 
 const InputRadio = (props) => {
   const {
@@ -45,6 +52,19 @@ const InputRadio = (props) => {
       </div>
     </div>
   );
+};
+
+InputRadio.propTypes = {
+  props: PropTypes.shape({
+    label: PropTypes.string,
+    value1: PropTypes.string,
+    value2: PropTypes.string,
+    isRadioSelected: PropTypes.func,
+    handleRadioClick: PropTypes.func,
+    name: PropTypes.string,
+    id1: PropTypes.string,
+    id2: PropTypes.string,
+  }),
 };
 
 export default InputRadio;
