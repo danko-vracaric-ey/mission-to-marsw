@@ -22,8 +22,6 @@ const LandingPage = () => {
   const ctx = useContext(Contex);
   const { dispatch } = ctx;
 
-  console.log(ctx.state);
-
   const [data, setData] = useState([]);
   const count = 5;
   const {

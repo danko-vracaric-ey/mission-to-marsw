@@ -84,7 +84,9 @@ const WizzardPage3 = (props) => {
         formIsValid: formIsValid,
       },
     });
-  }, [formIsValid, ctx]);
+
+    // eslint-disable-next-line
+  }, [formIsValid]);
 
   const [candidateDataPostResponse, setCandidateDataPostResponse] = useState({
     request: { statusText: "" },
@@ -124,7 +126,7 @@ const WizzardPage3 = (props) => {
     isInvalid: agriculturalSkillsDetailsInvalid,
   } = useInput(
     (val) => {
-      return val.trim() !== "" && val.length < 50;
+      return val.trim() !== "";
     },
     agriculturalSkillsDetailsInputHandler,
     state.agriculturalSkillsDetails

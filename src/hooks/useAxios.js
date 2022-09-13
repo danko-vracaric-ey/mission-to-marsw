@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useCallback } from "react";
 /**
- * A custom hook used to fetch data and from the API
+ * A custom hook used to fetch data from the API and post to the API
  * @param {string} url  Address of the API we connect to fetch data
  * @returns Boolean that shows loading state, error information and a function that fetches the data with given url
  */
@@ -21,7 +21,6 @@ const useAxios = (url) => {
 
           setData(data);
         } catch (error) {
-          console.log(error, " JA SAM ERROR ");
           setIsError(error.message || "Something went wrong!");
           setIsLoading(false);
         }
@@ -32,7 +31,6 @@ const useAxios = (url) => {
           const x = await axios.post(url, body);
           setData(x);
         } catch (error) {
-          console.log(error, " JA SAM ERROR ");
           setIsError(error.message || "Something went wrong!");
           setIsLoading(false);
         }

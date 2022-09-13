@@ -187,9 +187,9 @@ const WizzardPage2 = (props) => {
       country: event.target.value,
     }));
     let cntrs;
-    cntrs = countries.filter((e, i, arr) =>
-      e.name.includes(event.target.value)
-    );
+    cntrs = countries.filter((e, i, arr) => {
+      return e.name.toLowerCase().includes(event.target.value.toLowerCase());
+    });
     if (cntrs) {
       setSelectedCountries(cntrs);
     }
