@@ -103,7 +103,7 @@ export const WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE = "Please, select a state!";
 
 export const WIZARD_PAGE_2_CITY_LABEL = "City/Town";
 
-export const WIZARD_PAGE_2_CITY_ERROR_MESSAGE = "Please enter a city";
+export const WIZARD_PAGE_2_CITY_ERROR_MESSAGE = "Please select a city";
 
 export const WIZARD_PAGE_2_POSTAL_CODE_LABEL = "Postal code";
 

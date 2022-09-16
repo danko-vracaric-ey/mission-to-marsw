@@ -76,7 +76,7 @@ const WizzardPage2 = (props) => {
   }, [getStates]);
 
   const { fetchData: getCities } = useAxios(
-    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/${state.city}`
+    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/`
   );
 
   const { fetchData: getPostalCodes } = useAxios(
@@ -190,10 +190,10 @@ const WizzardPage2 = (props) => {
     cntrs = countries.filter((e, i, arr) => {
       return e.name.toLowerCase().includes(event.target.value.toLowerCase());
     });
-    if (cntrs) {
-      setSelectedCountries(cntrs);
-    }
+
+    setSelectedCountries(cntrs);
   };
+  console.log(selectedCountries);
 
   const address2InputHandler = (e) => {
     setState((prev) => ({ ...prev, address2: e.target.value }));
@@ -218,7 +218,7 @@ const WizzardPage2 = (props) => {
     isInvalid: selectInvalid,
   } = useInput(
     (val) => {
-      return val.trim() !== "Country" && val.trim() !== "";
+      return val.trim() !== "" && selectedCountries.length !== 0;
     },
     selectHandler,
     state.country
@@ -234,7 +234,7 @@ const WizzardPage2 = (props) => {
     isInvalid: cityInvalid,
   } = useInput(
     (val) => {
-      return val.length;
+      return val.length !== 0 && val !== "City";
     },
     cityInputHandler,
     state.city
@@ -257,9 +257,8 @@ const WizzardPage2 = (props) => {
     pstlCodes = postalCodes.filter((e, i, arr) =>
       e.code.includes(event.target.value)
     );
-    if (pstlCodes) {
-      setSelectedPostalCodes(pstlCodes);
-    }
+
+    setSelectedPostalCodes(pstlCodes);
   };
   const {
     onChangeFunc: postalCodeChangeFunc,
@@ -268,7 +267,7 @@ const WizzardPage2 = (props) => {
     isInvalid: postalCodeInvalid,
   } = useInput(
     (val) => {
-      return val.length && val !== "Zip";
+      return val.trim() !== "" && selectedPostalCodes.length !== 0;
     },
     postalCodeInputHandler,
     state.postalCode
@@ -405,20 +404,22 @@ const WizzardPage2 = (props) => {
                   isInvalid={selectInvalid}
                   errorMessage={WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE}
                 />
-                {!selectedStateTLA && state.country !== "" && (
-                  <div className={classes.search_countries}>
-                    {selectedCountries.map((el, i, arr) => {
-                      return (
-                        <p
-                          key={Math.random() + `${i}`}
-                          onClick={() => manageCountriesHandler(el, i)}
-                        >
-                          {el.name}
-                        </p>
-                      );
-                    })}
-                  </div>
-                )}
+                {!selectedStateTLA &&
+                  selectedCountries.length !== 0 &&
+                  state.country !== "" && (
+                    <div className={classes.search_countries}>
+                      {selectedCountries.map((el, i, arr) => {
+                        return (
+                          <p
+                            key={Math.random() + `${i}`}
+                            onClick={() => manageCountriesHandler(el, i)}
+                          >
+                            {el.name}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  )}
               </div>
               <div className={classes.cities_wrapper}>
                 <Select
@@ -432,7 +433,7 @@ const WizzardPage2 = (props) => {
                   onBlur={cityBlurFunc}
                   isInvalid={cityInvalid}
                   errorMessage={WIZARD_PAGE_2_CITY_ERROR_MESSAGE}
-                  disabled={!state.country}
+                  disabled={!selectedStateTLA}
                 />
               </div>
               <div className={classes.postalCodes_wrapper}>
@@ -451,20 +452,22 @@ const WizzardPage2 = (props) => {
                   isInvalid={postalCodeInvalid}
                   errorMessage={WIZARD_PAGE_2_POSTAL_CODE_ERROR_MESSAGE}
                 />
-                {!selectedPostalCodeNumber && state.postalCode !== "" && (
-                  <div className={classes.search_postalCodes}>
-                    {selectedPostalCodes.map((el, i, arr) => {
-                      return (
-                        <p
-                          key={Math.random() + `${i}`}
-                          onClick={() => managePostalCodesHandler(el, i)}
-                        >
-                          {el.code}
-                        </p>
-                      );
-                    })}
-                  </div>
-                )}
+                {!selectedPostalCodeNumber &&
+                  selectedPostalCodes.length !== 0 &&
+                  state.postalCode !== "" && (
+                    <div className={classes.search_postalCodes}>
+                      {selectedPostalCodes.map((el, i, arr) => {
+                        return (
+                          <p
+                            key={Math.random() + `${i}`}
+                            onClick={() => managePostalCodesHandler(el, i)}
+                          >
+                            {el.code}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  )}
               </div>
             </div>
             <Input
