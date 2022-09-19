@@ -76,7 +76,7 @@ const WizzardPage2 = (props) => {
   }, [getStates]);
 
   const { fetchData: getCities } = useAxios(
-    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/`
+    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities`
   );
 
   const { fetchData: getPostalCodes } = useAxios(
