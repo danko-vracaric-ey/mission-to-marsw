@@ -59,6 +59,7 @@ const ConvictedDetails = (props) => {
                   dataid={eachReasonNumber}
                   label={WIZARD_PAGE_3_CONVICTED_DETAILS_WHEN_LABEL}
                   value={reason.convictionDate}
+                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
 
@@ -87,7 +88,7 @@ const ConvictedDetails = (props) => {
                   onChange={(e) => reasonsListHandleChange(e)}
                   type="text"
                   dataid={eachReasonNumber}
-                  label="For what?"
+                  label={WIZARD_PAGE_3_CONVICTED_DETAILS_WHAT_LABEL}
                   value={reason.forWhat}
                   placeholder={
                     errorMessageReasons.length - 1 >= eachReasonNumber &&
@@ -102,8 +103,10 @@ const ConvictedDetails = (props) => {
                   onChange={(e) => reasonsListHandleChange(e)}
                   type="date"
                   dataid={eachReasonNumber}
-                  label="When?"
+                  label={WIZARD_PAGE_3_CONVICTED_DETAILS_WHEN_LABEL}
                   value={reason.convictionDate}
+                  min="1945-12-31"
+                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
               <div className={classes.convicted_details_buttons_wrapper}>

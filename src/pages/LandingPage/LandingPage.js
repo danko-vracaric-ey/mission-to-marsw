@@ -23,7 +23,7 @@ const LandingPage = () => {
   const { dispatch } = ctx;
 
   const [data, setData] = useState([]);
-  const count = 5;
+  const count = 8;
   const {
     error,
     isLoading,

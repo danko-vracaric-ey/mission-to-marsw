@@ -97,6 +97,13 @@ export const WIZARD_PAGE_2_ADDRESS_1_ERROR_MESSAGE =
 
 export const WIZARD_PAGE_2_ADDRESS_2_LABEL = "Address line 2";
 
+export const WIZARD_PAGE_2_COUNTRIES_URL =
+  "http://det.api.rs.ey.com/api/states";
+
+export const WIZARD_PAGE_2_CITIES_URL = "cities";
+
+export const WIZARD_PAGE_2_POSTALCODES_URL = "postalcodes";
+
 export const WIZARD_PAGE_2_COUNTRY_LABEL = "State";
 
 export const WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE = "Please, select a state!";

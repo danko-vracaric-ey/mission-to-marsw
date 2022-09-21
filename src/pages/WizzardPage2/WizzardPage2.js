@@ -15,6 +15,7 @@ import {
   WIZARD_PAGE_2_ADDRESS_1_ERROR_MESSAGE,
   WIZARD_PAGE_2_ADDRESS_1_LABEL,
   WIZARD_PAGE_2_ADDRESS_2_LABEL,
+  WIZARD_PAGE_2_COUNTRIES_URL,
   WIZARD_PAGE_2_COUNTRY_LABEL,
   WIZARD_PAGE_2_COUNTRY_ERROR_MESSAGE,
   WIZARD_PAGE_2_CITY_LABEL,
@@ -23,6 +24,8 @@ import {
   WIZARD_PAGE_2_POSTAL_CODE_ERROR_MESSAGE,
   WIZARD_PAGE_2_HOW_LONG_LIVED_LABEL,
   WIZARD_PAGE_2_HOW_LONG_LIVED_ERROR_MESSAGE,
+  WIZARD_PAGE_2_CITIES_URL,
+  WIZARD_PAGE_2_POSTALCODES_URL,
 } from "../../static";
 
 /**
@@ -67,20 +70,18 @@ const WizzardPage2 = (props) => {
     wizardData.selectedPostalCodeNumber
   );
 
-  const { fetchData: getStates } = useAxios(
-    "http://det.api.rs.ey.com/api/states"
-  );
+  const { fetchData: getStates } = useAxios(WIZARD_PAGE_2_COUNTRIES_URL);
 
   useEffect(() => {
     getStates(setCountries);
   }, [getStates]);
 
   const { fetchData: getCities } = useAxios(
-    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities`
+    `${WIZARD_PAGE_2_COUNTRIES_URL}/${selectedStateTLA}/${WIZARD_PAGE_2_CITIES_URL}`
   );
 
   const { fetchData: getPostalCodes } = useAxios(
-    `http://det.api.rs.ey.com/api/states/${selectedStateTLA}/cities/${state.city}/postalcodes`
+    `${WIZARD_PAGE_2_COUNTRIES_URL}/${selectedStateTLA}/${WIZARD_PAGE_2_CITIES_URL}/${state.city}/${WIZARD_PAGE_2_POSTALCODES_URL}`
   );
 
   useEffect(() => {

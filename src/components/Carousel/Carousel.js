@@ -18,7 +18,6 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
   const [isInnerWidth, setIsInnerWidth] = useState(window.innerWidth);
 
   let showRightArrow;
-
   const debounce = (fn, delay) => {
     let timerId;
     return (...args) => {
@@ -92,6 +91,7 @@ const Carousel = ({ data: randomSelectionOfImages }) => {
         <div className={classes.slider_wrapper}>
           <div className={classes.cards_wrapper}>
             {splitDataArr.map(
+              //eslint-disable-next-line
               (imageBatch, imageBatchPosition, imageBatches) => {
                 showRightArrow = imageBatches.length - 1;
                 buttons.push(
