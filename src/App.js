@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route
-            path="/application"
+            path="/application/*"
             element={<StartApplicationProccessPage />}
           />
           <Route path="/privacynotice" element={<PrivacyNoticePage />} />
@@ -31,6 +31,7 @@ function App() {
             path="/termsandcondition"
             element={<TermsAndConditionsPage />}
           />
+          <Route path="*" element={<LandingPage />}></Route>
         </Routes>
 
         <Footer></Footer>

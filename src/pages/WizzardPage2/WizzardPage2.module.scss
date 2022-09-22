@@ -1,0 +1,103 @@
+.form {
+  background-color: white;
+  font-weight: 600;
+}
+.input_field {
+  min-height: 80%;
+  padding: 20px;
+}
+
+.email_wrapper {
+  // height: 80px;
+}
+
+.address_wrapper {
+  display: flex;
+}
+.address {
+  width: 50%;
+}
+
+.state_city {
+  display: flex;
+  justify-content: space-around;
+  height: 80px;
+}
+.email {
+  width: 50%;
+}
+
+.time {
+  width: 33%;
+}
+
+.countries_wrapper {
+  padding: 5px;
+  width: 100%;
+  position: relative;
+}
+
+.search_countries {
+  height: 100px;
+  min-width: 93%;
+  overflow-y: scroll;
+  position: absolute;
+  background-color: white;
+  z-index: 100;
+
+  padding: 5px;
+
+  p {
+    font-size: small;
+    cursor: pointer;
+    padding: 2px;
+    border-bottom: 1px solid black;
+  }
+}
+
+.search_countries::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.693);
+}
+
+.search_countries::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 25px;
+  border: 1px solid black;
+}
+
+.postalCodes_wrapper {
+  padding: 5px;
+  width: 100%;
+  position: relative;
+}
+
+.search_postalCodes {
+  height: 100px;
+  min-width: 93%;
+  overflow-y: scroll;
+  position: absolute;
+  background-color: white;
+
+  padding: 5px;
+
+  p {
+    font-size: small;
+    cursor: pointer;
+  }
+}
+.search_postalCodes::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.693);
+}
+
+.search_postalCodes::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 25px;
+  border: 1px solid black;
+}
+
+.cities_wrapper {
+  padding: 5px;
+  width: 100%;
+}

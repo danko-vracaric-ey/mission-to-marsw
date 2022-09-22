@@ -4,7 +4,7 @@
 
 Mission to mars is an enthusiastic project created in EY Belgrade office by a collaborative effort. Our goal was to bring the user closer to NASA mission pictures, natural phenomenons and spark curiousity to explore further beyond the realms of our app by mocking applicating for real missions in few simple step.
 
-# Status In Progress - 30% ████▒▒▒▒▒▒▒▒
+# Status In Progress - 100% ████████▒
 
 # Built With
 

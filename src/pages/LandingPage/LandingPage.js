@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import useAxios from "../../hooks/useAxios";
@@ -10,6 +10,7 @@ import {
   LANDING_PAGE_PARAGRAPH,
   LANDING_PAGE_START_APPLICATION_BUTTON,
 } from "../../static";
+import { Contex } from "../../store/Store";
 
 /**
  * Landing/Home page is the first page that loads on the user's screen when user lauches the app,
@@ -18,8 +19,11 @@ import {
  */
 
 const LandingPage = () => {
+  const ctx = useContext(Contex);
+  const { dispatch } = ctx;
+
   const [data, setData] = useState([]);
-  const count = 5;
+  const count = 8;
   const {
     error,
     isLoading,
@@ -53,6 +57,14 @@ const LandingPage = () => {
       </div>
     );
   }
+  const onClickHandler = () => {
+    dispatch({
+      type: "HANDLE_FOOTER_LINKS",
+      payload: {
+        shouldShow: false,
+      },
+    });
+  };
 
   return (
     <div className={classes.container}>
@@ -60,8 +72,11 @@ const LandingPage = () => {
 
       <div className={classes.start_application_container}>
         <p>{LANDING_PAGE_PARAGRAPH}</p>
-        <Link to="/application">
-          <button className={classes.start_application_button}>
+        <Link to="/application/intro">
+          <button
+            className={classes.start_application_button}
+            onClick={onClickHandler}
+          >
             {LANDING_PAGE_START_APPLICATION_BUTTON}
           </button>
         </Link>
