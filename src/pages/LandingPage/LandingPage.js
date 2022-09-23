@@ -11,6 +11,7 @@ import {
   LANDING_PAGE_START_APPLICATION_BUTTON,
 } from "../../static";
 import { Contex } from "../../store/Store";
+import { Container, Row, Col } from "react-bootstrap";
 
 /**
  * Landing/Home page is the first page that loads on the user's screen when user lauches the app,
@@ -67,10 +68,10 @@ const LandingPage = () => {
   };
 
   return (
-    <div className={classes.container}>
-      {content}
+    <Container>
+      <Row>{content}</Row>
 
-      <div className={classes.start_application_container}>
+      <Row className={classes.start_application_container}>
         <p>{LANDING_PAGE_PARAGRAPH}</p>
         <Link to="/application/intro">
           <button
@@ -80,8 +81,8 @@ const LandingPage = () => {
             {LANDING_PAGE_START_APPLICATION_BUTTON}
           </button>
         </Link>
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
 

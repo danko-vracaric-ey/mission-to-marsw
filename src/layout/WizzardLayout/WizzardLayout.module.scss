@@ -1,22 +1,22 @@
 .wrapper {
-  height: 60%;
-  width: 32vw;
+  // height: 60%;
+  // width: 32vw;
   background-color: white;
 
-  padding-top: 10px;
-  @media (max-width: 1024px) {
-    width: 40vw;
-  }
-  @media (max-width: 768px) {
-    width: 55vw;
-  }
-  @media (max-width: 480px) {
-    width: 96vw;
-    height: 75%;
-  }
-  @media (max-height: 670px) {
-    height: 71%;
-  }
+  // padding-top: 10px;
+  //   @media (max-width: 1024px) {
+  //     width: 40vw;
+  //   }
+  //   @media (max-width: 768px) {
+  //     width: 55vw;
+  //   }
+  //   @media (max-width: 480px) {
+  //     width: 96vw;
+  //     height: 75%;
+  //   }
+  //   @media (max-height: 670px) {
+  //     height: 71%;
+  //   }
 }
 
 .step {

@@ -11,7 +11,7 @@ import classes from "./Header.module.scss";
 
 const Header = () => {
   return (
-    <HeaderAndFooterLayout className={classes.container}>
+    <HeaderAndFooterLayout>
       <Link to="/">
         <ImageLogo />
       </Link>

@@ -1,4 +1,5 @@
 import classes from "./AppLayout.module.scss";
+import Container from "react-bootstrap/Container";
 
 /**
  * A container layout component for App component styiling
@@ -7,7 +8,7 @@ import classes from "./AppLayout.module.scss";
  */
 
 const AppLayout = (props) => {
-  return <div className={classes.container}>{props.children}</div>;
+  return <Container>{props.children}</Container>;
 };
 
 export default AppLayout;

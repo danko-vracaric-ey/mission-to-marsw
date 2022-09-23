@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 
 import classes from "./Footer.module.scss";
 import HeaderAndFooterLayout from "../../layout/HeaderAndFooterLayout/HeaderAndFooterLayout";
@@ -7,6 +7,7 @@ import {
   FOOTER_PRIVACY_NOTICE_LINK_TEXT,
   FOOTER_TERMS_AND_CONDITIONS_LINK_TEXT,
 } from "../../static";
+import { Nav } from "react-bootstrap";
 
 /**
  * Standard Footer with links that lead to important information concerning using the app
@@ -16,7 +17,7 @@ import {
 const Footer = () => {
   const location = useLocation();
 
-  const [shouldShow, setShouldShow] = useState(true);
+  const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
     setShouldShow(true);
@@ -29,32 +30,36 @@ const Footer = () => {
   }, [location.pathname, shouldShow]);
 
   let landingFooterLinks = (
-    <div className={classes.wrapper}>
-      <div className={classes.privacynotice}>
-        <Link to="/privacynotice">
+    <Nav>
+      <Nav.Item>
+        <Nav.Link to="/privacynotice" as={Link} className="text-light">
           <p>{FOOTER_PRIVACY_NOTICE_LINK_TEXT}</p>
-        </Link>
-      </div>
-      <div className={classes.terms}>
-        <Link to="termsandcondition">
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link to="termsandcondition" as={Link} className="text-light">
           <p>{FOOTER_TERMS_AND_CONDITIONS_LINK_TEXT}</p>
-        </Link>
-      </div>
-    </div>
+        </Nav.Link>
+      </Nav.Item>
+    </Nav>
   );
   let wizzardFooterLinks = (
-    <div className={classes.wrapper}>
-      <div className={classes.privacynotice}>
-        <p>{FOOTER_PRIVACY_NOTICE_LINK_TEXT}</p>
-      </div>
-      <div className={classes.terms}>
-        <p>{FOOTER_TERMS_AND_CONDITIONS_LINK_TEXT}</p>
-      </div>
-    </div>
+    <Nav>
+      <Nav.Item>
+        <Nav.Link className="text-light" disabled>
+          <p>{FOOTER_PRIVACY_NOTICE_LINK_TEXT}</p>
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className="text-light" disabled>
+          <p>{FOOTER_TERMS_AND_CONDITIONS_LINK_TEXT}</p>
+        </Nav.Link>
+      </Nav.Item>
+    </Nav>
   );
 
   return (
-    <HeaderAndFooterLayout className={classes.container}>
+    <HeaderAndFooterLayout>
       {shouldShow ? landingFooterLinks : wizzardFooterLinks}
     </HeaderAndFooterLayout>
   );

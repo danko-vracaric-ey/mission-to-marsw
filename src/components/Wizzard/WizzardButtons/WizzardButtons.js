@@ -1,7 +1,8 @@
 import WizzardButtonsLayout from "../../../layout/WizzardButtonsLayout/WizzardButtonsLayout";
-import classes from "./WizzardButtons.module.scss";
+// import classes from "./WizzardButtons.module.scss";
 import { WIZARD_BUTTON_BACK, WIZARD_BUTTON_CONTINUE } from "../../../static";
 import PropTypes from "prop-types";
+import { Col, Button } from "react-bootstrap";
 
 /**
  * Reusable pair of buttons
@@ -20,16 +21,16 @@ const WizzardButtons = (props) => {
   } = props;
   return (
     <WizzardButtonsLayout>
-      <div className={classes.button_back}>
-        <button onClick={onClickBackHandler} disabled={disabledBack}>
+      <Col className="my-auto">
+        <Button onClick={onClickBackHandler} disabled={disabledBack}>
           {WIZARD_BUTTON_BACK}
-        </button>
-      </div>
-      <div className={classes.button_continue}>
-        <button disabled={disabled} onClick={onClickSubmitHandler}>
+        </Button>
+      </Col>
+      <Col className="my-auto d-flex justify-content-end">
+        <Button disabled={disabled} onClick={onClickSubmitHandler}>
           {buttonText ? buttonText : WIZARD_BUTTON_CONTINUE}
-        </button>
-      </div>
+        </Button>
+      </Col>
     </WizzardButtonsLayout>
   );
 };

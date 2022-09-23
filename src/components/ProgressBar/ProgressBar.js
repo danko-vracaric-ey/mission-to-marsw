@@ -3,6 +3,7 @@ import { useContext } from "react";
 import classes from "./ProgressBar.module.scss";
 import { Contex } from "../../store/Store";
 import { WIZARD_LAYOUT_PROGRESS_BAR_TEXT } from "../../static";
+import { Container, Row } from "react-bootstrap";
 
 /**
  * Component for visualizing sign up progress in wizard layout
@@ -25,8 +26,8 @@ const ProgressBar = (props) => {
   }
 
   return (
-    <div className={classes.container}>
-      <div className={classes.first}>
+    <Container>
+      <Row className={classes.first}>
         {formIsValid ? (
           <span>3/3 {WIZARD_LAYOUT_PROGRESS_BAR_TEXT}</span>
         ) : (
@@ -34,14 +35,14 @@ const ProgressBar = (props) => {
             {value}/{maxValue} {WIZARD_LAYOUT_PROGRESS_BAR_TEXT}
           </span>
         )}
-      </div>
+      </Row>
 
-      <div className={classes.chart}>
+      <Row className={classes.chart}>
         <div className={classes.inner}>
           <div className={classes.fill} style={{ width: barFillWidth }}></div>
         </div>
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
 

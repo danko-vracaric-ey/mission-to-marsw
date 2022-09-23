@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import WizzardFormLayout from "../../layout/WizzardFormLayout/WizzardFormLayout";
 import classes from "./WizzardPage1.module.scss";
 import Input from "../../components/Wizzard/Input/Input";
 import Select from "../../components/Wizzard/Select/Select";
@@ -23,7 +22,7 @@ import {
   WIZARD_PAGE_1_DATE_LABEL,
   WIZARD_PAGE_1_DATE_ERROR_MESSAGE,
 } from "../../static";
-
+import { Container } from "react-bootstrap";
 /**
  * First wizard page that users lands on after confirming terms and conditions
  *
@@ -142,81 +141,78 @@ const WizzardPage1 = (props) => {
   };
 
   return (
-    <WizzardFormLayout>
-      <form id="form1" className={classes.input_field} autoComplete="off">
-        <div className={classes.top}>
-          <Select
-            value2={state.title}
-            value={[
-              WIZARD_PAGE_1_SELECT_TITLE,
-              WIZARD_PAGE_1_SELECT_TITLE_1,
-              WIZARD_PAGE_1_SELECT_TITLE_2,
-              WIZARD_PAGE_1_SELECT_TITLE_3,
-              WIZARD_PAGE_1_SELECT_TITLE_4,
-              WIZARD_PAGE_1_SELECT_TITLE_5,
-            ]}
-            name="Title"
-            id="title"
-            label={WIZARD_PAGE_1_SELECT_LABEL}
-            notMandatory={false}
-            className={classes.select_input_wrapper}
-            onChange={onSelectChangeFunc}
-            onBlur={onSelectBlurFunc}
-            isInvalid={selectInvalid}
-            errorMessage={WIZARD_PAGE_1_ERROR_MESSAGE}
+    <Container>
+      <Select
+        value2={state.title}
+        value={[
+          WIZARD_PAGE_1_SELECT_TITLE,
+          WIZARD_PAGE_1_SELECT_TITLE_1,
+          WIZARD_PAGE_1_SELECT_TITLE_2,
+          WIZARD_PAGE_1_SELECT_TITLE_3,
+          WIZARD_PAGE_1_SELECT_TITLE_4,
+          WIZARD_PAGE_1_SELECT_TITLE_5,
+        ]}
+        name="Title"
+        id="title"
+        label={WIZARD_PAGE_1_SELECT_LABEL}
+        notMandatory={false}
+        className={classes.select_input_wrapper}
+        onChange={onSelectChangeFunc}
+        onBlur={onSelectBlurFunc}
+        isInvalid={selectInvalid}
+        errorMessage={WIZARD_PAGE_1_ERROR_MESSAGE}
+      />
+
+      <div className={classes.first_last_wrapper}>
+        <Input
+          type="text"
+          name="First Name"
+          id="first"
+          onChange={onNameChangeFunc}
+          onBlur={onNameBlurFunc}
+          className={classes.input_name_wrapper}
+          value={state.firstName}
+          isInvalid={nameInvalid}
+          errorMessage={WIZARD_PAGE_1_NAME_ERROR_MESSAGE}
+        />
+
+        <Input
+          className={classes.input_last_name_wrapper}
+          type="text"
+          name="Last Name"
+          id="last"
+          onChange={onLastNameChangeFunc}
+          onBlur={onLastNameBlurFunc}
+          value={state.lastName}
+          isInvalid={lastNameInvalid}
+          errorMessage={WIZARD_PAGE_1_LASTNAME_ERROR_MESSAGE}
+        />
+      </div>
+
+      <div className={classes.bottom}>
+        <div className={classes.input_date_wrapper}>
+          <Input
+            type="date"
+            name="date"
+            label={WIZARD_PAGE_1_DATE_LABEL}
+            id="date"
+            onChange={onDateChangeFunc}
+            onBlur={onDateBlurFunc}
+            value={state.dateOfBirth}
+            isInvalid={dateInvalid}
+            errorMessage={WIZARD_PAGE_1_DATE_ERROR_MESSAGE}
+            min="1960-12-31"
+            max="2002-12-31"
           />
-
-          <div className={classes.first_last_wrapper}>
-            <Input
-              type="text"
-              name="First Name"
-              id="first"
-              onChange={onNameChangeFunc}
-              onBlur={onNameBlurFunc}
-              className={classes.input_name_wrapper}
-              value={state.firstName}
-              isInvalid={nameInvalid}
-              errorMessage={WIZARD_PAGE_1_NAME_ERROR_MESSAGE}
-            />
-
-            <Input
-              className={classes.input_last_name_wrapper}
-              type="text"
-              name="Last Name"
-              id="last"
-              onChange={onLastNameChangeFunc}
-              onBlur={onLastNameBlurFunc}
-              value={state.lastName}
-              isInvalid={lastNameInvalid}
-              errorMessage={WIZARD_PAGE_1_LASTNAME_ERROR_MESSAGE}
-            />
-          </div>
         </div>
-        <div className={classes.bottom}>
-          <div className={classes.input_date_wrapper}>
-            <Input
-              type="date"
-              name="date"
-              label={WIZARD_PAGE_1_DATE_LABEL}
-              id="date"
-              onChange={onDateChangeFunc}
-              onBlur={onDateBlurFunc}
-              value={state.dateOfBirth}
-              isInvalid={dateInvalid}
-              errorMessage={WIZARD_PAGE_1_DATE_ERROR_MESSAGE}
-              min="1960-12-31"
-              max="2002-12-31"
-            />
-          </div>
-        </div>
-      </form>
+      </div>
 
       <WizzardButtons
         onClickBackHandler={onBackHandler}
         onClickSubmitHandler={onSubmitHandler}
         disabled={!formIsValid}
       />
-    </WizzardFormLayout>
+    </Container>
   );
 };
 
